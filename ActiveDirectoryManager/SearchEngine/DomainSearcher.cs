@@ -1,9 +1,20 @@
 ﻿using ActiveDirectoryManager.ActiveDirectoryItem;
+using ActiveDirectoryManager.ConnectionFactory;
+using ActiveDirectoryManager.ItemFactory;
 
 namespace ActiveDirectoryManager.SearchEngine;
 
 public class DomainSearcher : IDomainSearcher
 {
+    private IActiveDirectoryConnectionFactory _connectionFactory;
+    private IDomainItemFactory _domainItemFactory;
+
+    public DomainSearcher(IDomainItemFactory domainItemFactory, IActiveDirectoryConnectionFactory connectionFactory)
+    {
+        _domainItemFactory = domainItemFactory;
+        _connectionFactory = connectionFactory;
+    }
+
     public DomainItem? FindOne(QueryFilter queryFilter, DomainItemType type = DomainItemType.User,
         PropertyLoader? propertiesToLoad = null)
     {

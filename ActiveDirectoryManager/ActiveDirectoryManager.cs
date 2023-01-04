@@ -1,13 +1,13 @@
-﻿using System.DirectoryServices.AccountManagement;
+﻿using ActiveDirectoryManager.ConnectionFactory;
 
 namespace ActiveDirectoryManager;
 
 public class ActiveDirectoryManager
 {
-    private PrincipalContext _context;
+    private IActiveDirectoryConnectionFactory _connectionFactory;
 
-    public PrincipalContext GetUnderlyingContext()
+    public ActiveDirectoryManager(IActiveDirectoryConnectionFactory connectionFactory)
     {
-        return _context;
-    } 
+        _connectionFactory = connectionFactory;
+    }
 }
