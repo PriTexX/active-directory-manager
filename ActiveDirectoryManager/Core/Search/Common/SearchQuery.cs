@@ -1,4 +1,7 @@
-﻿namespace ActiveDirectoryManager.Core.Search;
+﻿using ActiveDirectoryManager.Core.Search.Filter;
+using ActiveDirectoryManager.Core.Search.PropertiesLoader;
+
+namespace ActiveDirectoryManager.Core.Search.Common;
 
 public class SearchQuery
 {
@@ -24,13 +27,13 @@ public class SearchQuery
         return this;
     }
 
-    public string GetStringFilter()
+    internal QueryFilter GetQueryFilter()
     {
-        return _queryFilter.ToStringFilter();
+        return _queryFilter;
     }
 
-    public string[] GetPropertiesToLoad()
+    internal PropertyLoader GetPropertyLoader()
     {
-        return  PropertiesToLoadResolver.Resolve(_propertyLoader);
+        return  _propertyLoader;
     }
 }

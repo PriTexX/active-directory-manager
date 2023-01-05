@@ -1,4 +1,4 @@
-﻿namespace ActiveDirectoryManager.Core.Search;
+﻿namespace ActiveDirectoryManager.Core.Search.PropertiesLoader;
 
 internal class PropertyLoader
 {

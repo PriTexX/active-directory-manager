@@ -1,12 +1,11 @@
 ﻿using System.DirectoryServices;
 using System.DirectoryServices.AccountManagement;
-using ActiveDirectoryManager.Application.Factories;
 using ActiveDirectoryManager.Core.Entities;
-using ActiveDirectoryManager.Core.Search;
+using ActiveDirectoryManager.Core.Search.Filter;
 
-namespace ActiveDirectoryManager.Infrastructure.Factories;
+namespace ActiveDirectoryManager.Core.Search.Engine;
 
-internal class DirectorySearcherBuilder : IDirectorySearcherBuilder
+internal class DirectorySearcherBuilder
 {
     private readonly FilterBuilder _filterBuilder;
 
@@ -15,13 +14,13 @@ internal class DirectorySearcherBuilder : IDirectorySearcherBuilder
         _filterBuilder = filterBuilder;
     }
 
-    public DirectorySearcher CreateInstance(PrincipalContext context, DomainItemType domainItemType, QueryFilter queryFilter, PropertyLoader propertyLoader)
+    public DirectorySearcher CreateInstance(PrincipalContext context, DomainItemType domainItemType, QueryFilter queryFilter, string[] propertiesToLoad)
     {
         var directorySearcher = (DirectorySearcher)GetPrincipalSearcher(context).GetUnderlyingSearcher();
         
         directorySearcher.Filter = _filterBuilder.BuildSearchFilter(queryFilter, domainItemType);
         directorySearcher.PropertiesToLoad.Clear();
-        directorySearcher.PropertiesToLoad.AddRange(PropertiesToLoadResolver.Resolve(propertyLoader));
+        directorySearcher.PropertiesToLoad.AddRange(propertiesToLoad);
         
         return directorySearcher;
     }

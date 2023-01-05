@@ -1,13 +1,11 @@
 ﻿using System.Text;
-using ActiveDirectoryManager.Application.Factories;
 using ActiveDirectoryManager.Core.Entities;
-using ActiveDirectoryManager.Core.Search;
 
-namespace ActiveDirectoryManager.Infrastructure.Factories;
+namespace ActiveDirectoryManager.Core.Search.Filter;
 
-internal class FilterBuilder : IFilterBuilder
+internal class FilterBuilder
 {
-    public string BuildSearchFilter(QueryFilter queryFilter, DomainItemType type)
+    public string BuildSearchFilter(QueryFilter searchQuery, DomainItemType type)
     {
         var filter = type switch
         {
@@ -17,7 +15,7 @@ internal class FilterBuilder : IFilterBuilder
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
         };
 
-        filter.Append(queryFilter.ToStringFilter());
+        filter.Append(searchQuery.ToStringFilter());
         
         filter.Append(')');
         
@@ -47,9 +45,9 @@ internal class FilterBuilder : IFilterBuilder
         while (hasMore)
         {
             ++count;
-            var queryFilter = enumerator.Current;
+            var searchQuery = enumerator.Current;
 
-            filter.Append(queryFilter.ToStringFilter());
+            filter.Append(searchQuery.ToStringFilter());
             
             hasMore = enumerator.MoveNext();
 

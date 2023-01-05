@@ -1,8 +1,8 @@
 ﻿using System.Text;
 
-namespace ActiveDirectoryManager.Core.Search;
+namespace ActiveDirectoryManager.Core.Search.Filter;
 
-public class QueryFilter
+internal class QueryFilter
 {
     protected readonly Dictionary<string, string?> PropertyCollection = new(StringComparer.OrdinalIgnoreCase);
 
@@ -15,13 +15,13 @@ public class QueryFilter
     public string? EmployeeNumber { get => GetProperty("employeenumber"); set => SetProperty("employeenumber", value); }
     public string? DisplayName { get => GetProperty("displayname"); set => SetProperty("displayname", value); }
 
-    protected string? GetProperty(string key)
+    public string? GetProperty(string key)
     {
         PropertyCollection.TryGetValue(key, out var prop);
         return prop;
     }
 
-    protected void SetProperty(string key, string? value)
+    public void SetProperty(string key, string? value)
     {
         var success = PropertyCollection.TryAdd(key, value);
         if (!success)
@@ -40,5 +40,10 @@ public class QueryFilter
         filter.Append(')');
         
         return filter.ToString();
+    }
+
+    public static QueryFilter Empty()
+    {
+        return new QueryFilter();
     }
 }

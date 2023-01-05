@@ -1,13 +1,10 @@
 ﻿using System.DirectoryServices;
-using ActiveDirectoryManager.Application.Factories;
 using ActiveDirectoryManager.Core.Entities;
 
-namespace ActiveDirectoryManager.Core.Search;
+namespace ActiveDirectoryManager.Core.Search.Engine;
 
 internal class DomainSearcherEngine
 {
-    internal IDomainItemFactory DomainItemFactory;
-    
     public SearchResult? FindOneItem(DirectorySearcher searcher, DomainItemType itemType)
     {
         return searcher.FindOne();
