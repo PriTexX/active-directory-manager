@@ -3,9 +3,9 @@ using ActiveDirectoryManager.ActiveDirectoryItem;
 
 namespace ActiveDirectoryManager.SearchEngine;
 
-internal static class FilterBuilder
+internal class FilterBuilder
 {
-    public static string BuildSearchFilter(QueryFilter queryFilter, DomainItemType type)
+    public string BuildSearchFilter(QueryFilter queryFilter, DomainItemType type)
     {
         var filter = type switch
         {
@@ -22,7 +22,7 @@ internal static class FilterBuilder
         return filter.ToString();
     }
 
-    public static (string, IEnumerator<QueryFilter>, bool) BuildSearchFilter(IEnumerator<QueryFilter> enumerator, int maxCount, DomainItemType type)
+    public (string, IEnumerator<QueryFilter>, bool) BuildSearchFilter(IEnumerator<QueryFilter> enumerator, int maxCount, DomainItemType type)
     {
         var filter = new StringBuilder(2048);
 
@@ -62,7 +62,7 @@ internal static class FilterBuilder
         return (filter.ToString(), enumerator, false);
     }
 
-    public static (string, IEnumerator<string>, bool) BuildSearchFilter(IEnumerator<string> enumerator, int maxCount, 
+    public (string, IEnumerator<string>, bool) BuildSearchFilter(IEnumerator<string> enumerator, int maxCount, 
         DomainItemType type, string propertyName)
     {
         

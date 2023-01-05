@@ -4,7 +4,7 @@ using ActiveDirectoryManager.ItemFactory;
 
 namespace ActiveDirectoryManager.SearchEngine;
 
-public class DomainSearcher : IDomainSearcher
+public class DomainSearcher
 {
     private IActiveDirectoryConnectionFactory _connectionFactory;
     private IDomainItemFactory _domainItemFactory;

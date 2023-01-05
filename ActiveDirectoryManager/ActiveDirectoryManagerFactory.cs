@@ -22,9 +22,9 @@ public class ActiveDirectoryManagerFactory
     }
 
     public ActiveDirectoryManagerFactory ConfigureDomainSearcher(
-        Func<DomainSearcherBuilder, DomainSearcherBuilder> domainSearcherConfigurer)
+        Func<DomainSearcherBuilder, DomainSearcherBuilder> domainSearcherConfigurator)
     {
-        _domainSearcherBuilder = domainSearcherConfigurer(_domainSearcherBuilder);
+        _domainSearcherBuilder = domainSearcherConfigurator(_domainSearcherBuilder);
         return this;
     }
 

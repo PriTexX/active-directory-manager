@@ -1,36 +1,31 @@
 ﻿using System.DirectoryServices;
 using System.DirectoryServices.AccountManagement;
 using ActiveDirectoryManager.ActiveDirectoryItem;
-using ActiveDirectoryManager.ItemFactory;
 
 namespace ActiveDirectoryManager.SearchEngine;
 
 internal class DirectorySearcherBuilder
 {
-    private PrincipalContext _principalContext;
-    private string _filter = "";
-    private string[]? _propertiesToLoad;
-    private DomainItemType _domainItemType = DomainItemType.User;
+    private readonly FilterBuilder _filterBuilder;
+
+    public DirectorySearcherBuilder(FilterBuilder filterBuilder)
+    {
+        _filterBuilder = filterBuilder;
+    }
 
     public DirectorySearcher CreateInstance(PrincipalContext context, DomainItemType domainItemType, QueryFilter queryFilter, PropertyLoader propertyLoader)
     {
-        _principalContext = context;
-        _domainItemType = domainItemType;
-        _filter = FilterBuilder.BuildSearchFilter(queryFilter, _domainItemType);
-        _propertiesToLoad = PropertiesToLoadResolver.Resolve(propertyLoader);
-            
-            
-        var directorySearcher = (DirectorySearcher)GetPrincipalSearcher().GetUnderlyingSearcher();
+        var directorySearcher = (DirectorySearcher)GetPrincipalSearcher(context).GetUnderlyingSearcher();
         
-        directorySearcher.Filter = _filter;
+        directorySearcher.Filter = _filterBuilder.BuildSearchFilter(queryFilter, domainItemType);
         directorySearcher.PropertiesToLoad.Clear();
-        directorySearcher.PropertiesToLoad.AddRange(_propertiesToLoad);
+        directorySearcher.PropertiesToLoad.AddRange(PropertiesToLoadResolver.Resolve(propertyLoader));
         
         return directorySearcher;
     }
 
-    private PrincipalSearcher GetPrincipalSearcher()
+    private PrincipalSearcher GetPrincipalSearcher(PrincipalContext context)
     {
-        return new PrincipalSearcher(new GroupPrincipal(_principalContext));
+        return new PrincipalSearcher(new GroupPrincipal(context));
     }
 }
