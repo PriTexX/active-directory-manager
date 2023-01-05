@@ -1,5 +1,6 @@
 ﻿using System.DirectoryServices;
-using System.DirectoryServices.AccountManagement;
+using ActiveDirectoryManager.Infrastructure.Factories;
+
 
 namespace ActiveDirectoryManager;
 
