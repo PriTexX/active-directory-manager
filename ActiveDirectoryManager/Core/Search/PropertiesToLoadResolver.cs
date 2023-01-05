@@ -1,4 +1,4 @@
-﻿namespace ActiveDirectoryManager.SearchEngine;
+﻿namespace ActiveDirectoryManager.Core.Search;
 
 internal static class PropertiesToLoadResolver
 {

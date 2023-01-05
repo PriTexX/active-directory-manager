@@ -1,10 +1,11 @@
-﻿using ActiveDirectoryManager.ActiveDirectoryItem;
-using ActiveDirectoryManager.ConnectionFactory;
-using ActiveDirectoryManager.ItemFactory;
+﻿using ActiveDirectoryManager.Application.Common;
+using ActiveDirectoryManager.Application.Factories;
+using ActiveDirectoryManager.Core.Entities;
+using ActiveDirectoryManager.Core.Search;
 
-namespace ActiveDirectoryManager.SearchEngine;
+namespace ActiveDirectoryManager.Infrastructure.Common;
 
-public class DomainSearcher
+public class DomainSearcher : IDomainSearcher
 {
     private IActiveDirectoryConnectionFactory _connectionFactory;
     private IDomainItemFactory _domainItemFactory;

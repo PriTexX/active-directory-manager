@@ -1,6 +1,6 @@
 ﻿using System.DirectoryServices;
 
-namespace ActiveDirectoryManager.ActiveDirectoryItem;
+namespace ActiveDirectoryManager.Core.Entities;
 
 public abstract class DomainItem
 {

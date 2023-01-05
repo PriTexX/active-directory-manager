@@ -1,10 +1,12 @@
 ﻿using System.DirectoryServices;
 using System.DirectoryServices.AccountManagement;
-using ActiveDirectoryManager.ActiveDirectoryItem;
+using ActiveDirectoryManager.Application.Factories;
+using ActiveDirectoryManager.Core.Entities;
+using ActiveDirectoryManager.Core.Search;
 
-namespace ActiveDirectoryManager.SearchEngine;
+namespace ActiveDirectoryManager.Infrastructure.Factories;
 
-internal class DirectorySearcherBuilder
+internal class DirectorySearcherBuilder : IDirectorySearcherBuilder
 {
     private readonly FilterBuilder _filterBuilder;
 

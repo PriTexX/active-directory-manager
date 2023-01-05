@@ -1,6 +1,7 @@
 ﻿using System.DirectoryServices.AccountManagement;
+using ActiveDirectoryManager.Application.Factories;
 
-namespace ActiveDirectoryManager.ConnectionFactory;
+namespace ActiveDirectoryManager.Infrastructure.Common;
 
 public class ActiveDirectoryConnectionFactory : IActiveDirectoryConnectionFactory
 {
@@ -16,6 +17,11 @@ public class ActiveDirectoryConnectionFactory : IActiveDirectoryConnectionFactor
     }
 
     public PrincipalContext Connect()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<PrincipalContext> ConnectAsync()
     {
         throw new NotImplementedException();
     }

@@ -1,32 +1,34 @@
-﻿using ActiveDirectoryManager.ConnectionFactory;
-using ActiveDirectoryManager.ItemFactory;
+﻿using ActiveDirectoryManager.Application.Common;
+using ActiveDirectoryManager.Application.Factories;
+using ActiveDirectoryManager.Core.Search;
+using ActiveDirectoryManager.Infrastructure.Common;
 
-namespace ActiveDirectoryManager.SearchEngine;
+namespace ActiveDirectoryManager.Infrastructure.Factories;
 
-public class DomainSearcherBuilder
+public class DomainSearcherBuilder : IDomainSearcherBuilder
 {
     private IActiveDirectoryConnectionFactory? _connectionFactory;
     private IDomainItemFactory? _domainItemFactory;
 
-    public DomainSearcherBuilder SetStandardPropertiesToLoad(PropertyLoader propertiesToLoad)
+    public IDomainSearcherBuilder SetStandardPropertiesToLoad(PropertyLoader propertiesToLoad)
     {
         PropertiesToLoadResolver.SetStandardPropertiesToLoad(propertiesToLoad);
         return this;
     }
 
-    public DomainSearcherBuilder SetConnectionFactory(IActiveDirectoryConnectionFactory connectionFactory)
+    public IDomainSearcherBuilder SetConnectionFactory(IActiveDirectoryConnectionFactory connectionFactory)
     {
         _connectionFactory = connectionFactory;
         return this;
     }
 
-    public DomainSearcherBuilder SetDomainItemFactory(IDomainItemFactory domainItemFactory)
+    public IDomainSearcherBuilder SetDomainItemFactory(IDomainItemFactory domainItemFactory)
     {
         _domainItemFactory = domainItemFactory;
         return this;
     }
 
-    public DomainSearcher Build()
+    public IDomainSearcher Build()
     {
         if (_connectionFactory is null)
             throw new ArgumentException("ConnectionFactory must be specified in DomainSearchBuilder before building a DomainSearcher");

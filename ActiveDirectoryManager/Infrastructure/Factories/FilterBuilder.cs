@@ -1,9 +1,11 @@
 ﻿using System.Text;
-using ActiveDirectoryManager.ActiveDirectoryItem;
+using ActiveDirectoryManager.Application.Factories;
+using ActiveDirectoryManager.Core.Entities;
+using ActiveDirectoryManager.Core.Search;
 
-namespace ActiveDirectoryManager.SearchEngine;
+namespace ActiveDirectoryManager.Infrastructure.Factories;
 
-internal class FilterBuilder
+internal class FilterBuilder : IFilterBuilder
 {
     public string BuildSearchFilter(QueryFilter queryFilter, DomainItemType type)
     {

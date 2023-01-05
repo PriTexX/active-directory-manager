@@ -1,6 +1,7 @@
-﻿using ActiveDirectoryManager.ActiveDirectoryItem;
+﻿using ActiveDirectoryManager.Core.Entities;
+using ActiveDirectoryManager.Core.Search;
 
-namespace ActiveDirectoryManager.SearchEngine;
+namespace ActiveDirectoryManager.Application.Common;
 
 public interface IDomainSearcher
 {

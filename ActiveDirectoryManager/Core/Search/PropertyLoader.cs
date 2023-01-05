@@ -1,4 +1,4 @@
-﻿namespace ActiveDirectoryManager.SearchEngine;
+﻿namespace ActiveDirectoryManager.Core.Search;
 
 public class PropertyLoader
 {

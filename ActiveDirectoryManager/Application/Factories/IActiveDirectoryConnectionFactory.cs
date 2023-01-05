@@ -1,8 +1,9 @@
 ﻿using System.DirectoryServices.AccountManagement;
 
-namespace ActiveDirectoryManager.ConnectionFactory;
+namespace ActiveDirectoryManager.Application.Factories;
 
 public interface IActiveDirectoryConnectionFactory
 {
     public PrincipalContext Connect();
+    public Task<PrincipalContext> ConnectAsync();
 }

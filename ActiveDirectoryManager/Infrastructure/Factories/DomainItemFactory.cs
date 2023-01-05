@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.DirectoryServices;
 using System.Runtime.Versioning;
-using ActiveDirectoryManager.ActiveDirectoryItem;
+using ActiveDirectoryManager.Application.Factories;
+using ActiveDirectoryManager.Core.Entities;
 
-namespace ActiveDirectoryManager.ItemFactory;
+namespace ActiveDirectoryManager.Infrastructure.Factories;
 
 [SupportedOSPlatform("windows")]
 internal class DomainItemFactory : IDomainItemFactory
