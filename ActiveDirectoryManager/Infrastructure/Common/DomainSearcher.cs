@@ -11,9 +11,9 @@ namespace ActiveDirectoryManager.Infrastructure.Common;
 
 public class DomainSearcher : IDomainSearcher
 {
-    private IActiveDirectoryConnectionFactory _connectionFactory;
-    private IDomainItemFactory _domainItemFactory;
-    private DirectorySearcherBuilder _directorySearcherBuilder; 
+    private readonly IActiveDirectoryConnectionFactory _connectionFactory;
+    private readonly IDomainItemFactory _domainItemFactory;
+    private readonly DirectorySearcherBuilder _directorySearcherBuilder; 
     private readonly PropertiesToLoadResolver _propertiesToLoadResolver;
 
     internal DomainSearcher(IDomainItemFactory domainItemFactory, IActiveDirectoryConnectionFactory connectionFactory, PropertiesToLoadResolver propertiesToLoadResolver, DirectorySearcherBuilder directorySearcherBuilder)
@@ -29,7 +29,7 @@ public class DomainSearcher : IDomainSearcher
         var directorySearcher = _directorySearcherBuilder.CreateInstance(_connectionFactory.Connect(), type,
             searchQuery.GetQueryFilter(), _propertiesToLoadResolver.Resolve(searchQuery.GetPropertyLoader()));
         
-        var searchResult = DomainSearcherEngine.FindAllItem(directorySearcher, type);
+        var searchResult = DomainSearcherEngine.FindOneItem(directorySearcher, type);
         
         return _domainItemFactory.CreateInstance(searchResult ?? throw new InvalidOperationException(), type);
     }
@@ -45,13 +45,7 @@ public class DomainSearcher : IDomainSearcher
             yield return _domainItemFactory.CreateInstance(item ?? throw new InvalidOperationException(), type);
     }
 
-    // public IEnumerable<DomainItem?> FindAllByPropertyName(IEnumerable<string> properties, string propertyName,
-    //     DomainItemType type = DomainItemType.User, PropertyLoader? propertiesToLoad = null, int maxQueryLength = 50)
-    // {
-    //     throw new NotImplementedException();
-    // }
-
-    public IEnumerable<DomainItem?> FindAllByQueryFilters(IEnumerable<SearchQuery> queries, DomainItemType type = DomainItemType.User, int maxQueryLength = 50)
+    public IEnumerable<DomainItem?> FindAllByQueryFilters(IEnumerable<SearchQuery> queries, DomainItemType type = DomainItemType.User)
     {
         foreach (var searchQuery in queries)
         {
@@ -65,44 +59,90 @@ public class DomainSearcher : IDomainSearcher
         }
     }
 
-    public IEnumerable<GroupItem?> FindItemGroups(DomainItem item, SearchQuery? propertiesToLoad = null)
+    public IEnumerable<GroupItem?> FindItemGroups(DomainItem domainItem, SearchQuery? searchQuery = null)
     {
-        throw new NotImplementedException();
+        var directorySearcher = _directorySearcherBuilder.CreateInstance(_connectionFactory.Connect(), domainItem.DomainItemType, searchQuery!.GetQueryFilter(), 
+            _propertiesToLoadResolver.Resolve(searchQuery.GetPropertyLoader()));
+        directorySearcher.Filter =
+            $"(&(objectCategory=group)(member:1.2.840.113556.1.4.1941:={domainItem.DistinguishedName}))";
+        
+        var searchResult = DomainSearcherEngine.FindAllItems(directorySearcher, DomainItemType.Group);
+
+        foreach (var item in searchResult)
+            yield return _domainItemFactory.CreateInstance(item ?? throw new InvalidOperationException(), DomainItemType.Group).ToGroup();
     }
 
-    public IEnumerable<UserItem?> FindGroupUsers(GroupItem group, SearchQuery? propertiesToLoad = null)
+    public IEnumerable<UserItem?> FindGroupUsers(GroupItem group, SearchQuery? searchQuery = null)
     {
-        throw new NotImplementedException();
+        var directorySearcher = _directorySearcherBuilder.CreateInstance(_connectionFactory.Connect(), group.DomainItemType, searchQuery!.GetQueryFilter(), 
+            _propertiesToLoadResolver.Resolve(searchQuery.GetPropertyLoader()));
+        directorySearcher.Filter =
+            $"(&(sAMAccountType=805306368)(memberOf:1.2.840.113556.1.4.1941:={group.DistinguishedName}))";
+        
+        var searchResult = DomainSearcherEngine.FindAllItems(directorySearcher, DomainItemType.User);
+
+        foreach (var item in searchResult)
+            yield return _domainItemFactory.CreateInstance(item ?? throw new InvalidOperationException(), DomainItemType.Group).ToUser();
     }
 
-    public Task<DomainItem?> FindOneAsync(SearchQuery searchQuery, DomainItemType type = DomainItemType.User)
+    public async Task<DomainItem?> FindOneAsync(SearchQuery searchQuery, DomainItemType type = DomainItemType.User)
     {
-        throw new NotImplementedException();
+        var directorySearcher = _directorySearcherBuilder.CreateInstance(await _connectionFactory.ConnectAsync(), type,
+            searchQuery.GetQueryFilter(), _propertiesToLoadResolver.Resolve(searchQuery.GetPropertyLoader()));
+        
+        var searchResult = await DomainSearcherEngine.FindOneItemAsync(directorySearcher, type);
+
+        return _domainItemFactory.CreateInstance(searchResult ?? throw new InvalidOperationException(), type);
     }
 
-    public IAsyncEnumerable<DomainItem?> FindAllAsync(SearchQuery searchQuery, DomainItemType type = DomainItemType.User)
+    public async IAsyncEnumerable<DomainItem?> FindAllAsync(SearchQuery searchQuery, DomainItemType type = DomainItemType.User)
     {
-        throw new NotImplementedException();
+        var directorySearcher = _directorySearcherBuilder.CreateInstance(await _connectionFactory.ConnectAsync(), type,
+            searchQuery.GetQueryFilter(), _propertiesToLoadResolver.Resolve(searchQuery.GetPropertyLoader()));
+        
+        var searchResult = DomainSearcherEngine.FindAllItemsAsync(directorySearcher, type);
+        
+        await foreach (var item in searchResult)
+            yield return _domainItemFactory.CreateInstance(item ?? throw new InvalidOperationException(), type);
     }
 
-    // public IAsyncEnumerable<DomainItem?> FindAllByPropertyNameAsync(IEnumerable<string> properties, string propertyName,
-    //     DomainItemType type = DomainItemType.User, PropertyLoader? propertiesToLoad = null, int maxQueryLength = 50)
-    // {
-    //     throw new NotImplementedException();
-    // }
-
-    public IAsyncEnumerable<DomainItem?> FindAllByQueryFiltersAsync(IEnumerable<SearchQuery> queries, DomainItemType type = DomainItemType.User, int maxQueryLength = 50)
+    public async IAsyncEnumerable<DomainItem?> FindAllByQueryFiltersAsync(IEnumerable<SearchQuery> queries, DomainItemType type = DomainItemType.User)
     {
-        throw new NotImplementedException();
+        foreach (var searchQuery in queries)
+        {
+            var directorySearcher = _directorySearcherBuilder.CreateInstance(await _connectionFactory.ConnectAsync(), type, searchQuery.GetQueryFilter(), 
+                _propertiesToLoadResolver.Resolve(searchQuery.GetPropertyLoader()));
+            
+            var searchResult = DomainSearcherEngine.FindAllItemsAsync(directorySearcher, type);
+            
+            await foreach (var item in searchResult)
+                yield return _domainItemFactory.CreateInstance(item ?? throw new InvalidOperationException(), type);
+        }
     }
 
-    public IAsyncEnumerable<GroupItem?> FindItemGroupsAsync(DomainItem item, SearchQuery? propertiesToLoad = null)
+    public async IAsyncEnumerable<GroupItem?> FindItemGroupsAsync(DomainItem domainItem, SearchQuery? searchQuery = null)
     {
-        throw new NotImplementedException();
+        var directorySearcher = _directorySearcherBuilder.CreateInstance(await _connectionFactory.ConnectAsync(), domainItem.DomainItemType, searchQuery!.GetQueryFilter(), 
+            _propertiesToLoadResolver.Resolve(searchQuery.GetPropertyLoader()));
+        directorySearcher.Filter =
+            $"(&(objectCategory=group)(member:1.2.840.113556.1.4.1941:={domainItem.DistinguishedName}))";
+        
+        var searchResult = DomainSearcherEngine.FindAllItemsAsync(directorySearcher, DomainItemType.Group);
+
+        await foreach (var item in searchResult)
+            yield return _domainItemFactory.CreateInstance(item ?? throw new InvalidOperationException(), DomainItemType.Group).ToGroup();
     }
 
-    public IAsyncEnumerable<UserItem?> FindGroupUsersAsync(GroupItem group, SearchQuery? propertiesToLoad = null)
+    public async IAsyncEnumerable<UserItem?> FindGroupUsersAsync(GroupItem group, SearchQuery? searchQuery = null)
     {
-        throw new NotImplementedException();
+        var directorySearcher = _directorySearcherBuilder.CreateInstance(await _connectionFactory.ConnectAsync(), group.DomainItemType, searchQuery!.GetQueryFilter(), 
+            _propertiesToLoadResolver.Resolve(searchQuery.GetPropertyLoader()));
+        directorySearcher.Filter =
+            $"(&(sAMAccountType=805306368)(memberOf:1.2.840.113556.1.4.1941:={group.DistinguishedName}))";
+        
+        var searchResult = DomainSearcherEngine.FindAllItemsAsync(directorySearcher, DomainItemType.User);
+
+        await foreach (var item in searchResult)
+            yield return _domainItemFactory.CreateInstance(item ?? throw new InvalidOperationException(), DomainItemType.Group).ToUser();
     }
 }

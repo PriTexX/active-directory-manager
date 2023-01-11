@@ -1,4 +1,5 @@
 ﻿using System.DirectoryServices;
+using System.Text.RegularExpressions;
 
 namespace ActiveDirectoryManager.Core.Entities;
 
@@ -86,5 +87,15 @@ public abstract class DomainItem
     public DirectoryEntry GetUnderlyingObject()
     {
         return DirectoryEntry ??= SearchResult.GetDirectoryEntry();
+    }
+
+    public GroupItem ToGroup()
+    {
+        return (GroupItem)this;
+    }
+
+    public UserItem ToUser()
+    {
+        return (UserItem)this;
     }
 }

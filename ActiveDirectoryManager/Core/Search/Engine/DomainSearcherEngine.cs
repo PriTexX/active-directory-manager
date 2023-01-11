@@ -5,7 +5,7 @@ namespace ActiveDirectoryManager.Core.Search.Engine;
 
 internal class DomainSearcherEngine
 {
-    public static SearchResult? FindAllItem(DirectorySearcher searcher, DomainItemType itemType)
+    public static SearchResult? FindOneItem(DirectorySearcher searcher, DomainItemType itemType)
     {
         return searcher.FindOne();
     }
@@ -17,7 +17,7 @@ internal class DomainSearcherEngine
     
     public static async Task<SearchResult?> FindOneItemAsync(DirectorySearcher searcher, DomainItemType itemType)
     {
-        return await Task.Run(() => FindAllItem(searcher, itemType)).ConfigureAwait(false);
+        return await Task.Run(() => FindOneItem(searcher, itemType)).ConfigureAwait(false);
     }
     
     public static async IAsyncEnumerable<SearchResult?> FindAllItemsAsync(DirectorySearcher searcher, DomainItemType itemType)
