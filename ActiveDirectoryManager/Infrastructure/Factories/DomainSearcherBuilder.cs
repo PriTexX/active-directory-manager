@@ -14,7 +14,7 @@ public class DomainSearcherBuilder : IDomainSearcherBuilder
 
     public IDomainSearcherBuilder SetStandardPropertiesToLoad(SearchQuery propertiesToLoad)
     {
-        _propertiesToLoadResolver.SetStandardPropertiesToLoad(propertiesToLoad.GetPropertyLoader());
+        _propertiesToLoadResolver.SetStandardPropertiesToLoad(propertiesToLoad.GetPropertiesToLoad(_propertiesToLoadResolver));
         return this;
     }
 
