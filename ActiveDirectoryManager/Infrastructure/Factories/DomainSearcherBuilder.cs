@@ -1,6 +1,8 @@
 ﻿using ActiveDirectoryManager.Application.Common;
 using ActiveDirectoryManager.Application.Factories;
 using ActiveDirectoryManager.Core.Search.Common;
+using ActiveDirectoryManager.Core.Search.Engine;
+using ActiveDirectoryManager.Core.Search.Filter;
 using ActiveDirectoryManager.Core.Search.PropertiesLoader;
 using ActiveDirectoryManager.Infrastructure.Common;
 
@@ -10,6 +12,7 @@ public class DomainSearcherBuilder : IDomainSearcherBuilder
 {
     private IActiveDirectoryConnectionFactory? _connectionFactory;
     private IDomainItemFactory? _domainItemFactory;
+    private readonly DirectorySearcherBuilder _directorySearcherBuilder = new (new FilterBuilder()); 
     private readonly PropertiesToLoadResolver _propertiesToLoadResolver = new ();
 
     public IDomainSearcherBuilder SetStandardPropertiesToLoad(SearchQuery propertiesToLoad)
@@ -41,6 +44,6 @@ public class DomainSearcherBuilder : IDomainSearcherBuilder
         if (_connectionFactory is null)
             throw new ArgumentException("ConnectionFactory must be specified in DomainSearchBuilder before building a DomainSearcher");
 
-        return new DomainSearcher(_domainItemFactory ?? new DomainItemFactory(), _connectionFactory, _propertiesToLoadResolver);
+        return new DomainSearcher(_domainItemFactory ?? throw new Exception("Factory must be initialized"), _connectionFactory, _propertiesToLoadResolver, _directorySearcherBuilder);
     }
 }

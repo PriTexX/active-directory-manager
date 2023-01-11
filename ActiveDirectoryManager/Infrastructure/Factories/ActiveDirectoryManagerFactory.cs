@@ -43,6 +43,7 @@ public class ActiveDirectoryManagerFactory : IActiveDirectoryManagerFactory
 
         _domainSearcher = _domainSearcherBuilder
             .SetConnectionFactory(_connectionFactory)
+            .SetDomainItemFactory(new DomainItemFactory())
             .Build();
 
         return this;
