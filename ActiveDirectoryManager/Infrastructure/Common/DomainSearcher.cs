@@ -31,7 +31,7 @@ public class DomainSearcher : IDomainSearcher
         
         var searchResult = DomainSearcherEngine.FindOneItem(directorySearcher, type);
         
-        return _domainItemFactory.CreateInstance(searchResult ?? throw new InvalidOperationException(), type);
+        return _domainItemFactory.CreateInstance(searchResult, type);
     }
 
     public IEnumerable<DomainItem?> FindAll(SearchQuery searchQuery, DomainItemType type = DomainItemType.User)
@@ -42,7 +42,7 @@ public class DomainSearcher : IDomainSearcher
         var searchResult = DomainSearcherEngine.FindAllItems(directorySearcher, type);
         
         foreach (var item in searchResult)
-            yield return _domainItemFactory.CreateInstance(item ?? throw new InvalidOperationException(), type);
+            yield return _domainItemFactory.CreateInstance(item, type);
     }
 
     public IEnumerable<DomainItem?> FindAllByQueryFilters(IEnumerable<SearchQuery> queries, DomainItemType type = DomainItemType.User)
@@ -55,7 +55,7 @@ public class DomainSearcher : IDomainSearcher
             var searchResult = DomainSearcherEngine.FindAllItems(directorySearcher, type);
             
             foreach (var item in searchResult)
-                yield return _domainItemFactory.CreateInstance(item ?? throw new InvalidOperationException(), type);
+                yield return _domainItemFactory.CreateInstance(item, type);
         }
     }
 
@@ -69,7 +69,7 @@ public class DomainSearcher : IDomainSearcher
         var searchResult = DomainSearcherEngine.FindAllItems(directorySearcher, DomainItemType.Group);
 
         foreach (var item in searchResult)
-            yield return _domainItemFactory.CreateInstance(item ?? throw new InvalidOperationException(), DomainItemType.Group).ToGroup();
+            yield return _domainItemFactory.CreateInstance(item, DomainItemType.Group).ToGroup();
     }
 
     public IEnumerable<UserItem?> FindGroupUsers(GroupItem group, SearchQuery? searchQuery = null)
@@ -82,7 +82,7 @@ public class DomainSearcher : IDomainSearcher
         var searchResult = DomainSearcherEngine.FindAllItems(directorySearcher, DomainItemType.User);
 
         foreach (var item in searchResult)
-            yield return _domainItemFactory.CreateInstance(item ?? throw new InvalidOperationException(), DomainItemType.Group).ToUser();
+            yield return _domainItemFactory.CreateInstance(item, DomainItemType.Group).ToUser();
     }
 
     public async Task<DomainItem?> FindOneAsync(SearchQuery searchQuery, DomainItemType type = DomainItemType.User)
@@ -92,7 +92,7 @@ public class DomainSearcher : IDomainSearcher
         
         var searchResult = await DomainSearcherEngine.FindOneItemAsync(directorySearcher, type);
 
-        return _domainItemFactory.CreateInstance(searchResult ?? throw new InvalidOperationException(), type);
+        return _domainItemFactory.CreateInstance(searchResult, type);
     }
 
     public async IAsyncEnumerable<DomainItem?> FindAllAsync(SearchQuery searchQuery, DomainItemType type = DomainItemType.User)
@@ -103,7 +103,7 @@ public class DomainSearcher : IDomainSearcher
         var searchResult = DomainSearcherEngine.FindAllItemsAsync(directorySearcher, type);
         
         await foreach (var item in searchResult)
-            yield return _domainItemFactory.CreateInstance(item ?? throw new InvalidOperationException(), type);
+            yield return _domainItemFactory.CreateInstance(item, type);
     }
 
     public async IAsyncEnumerable<DomainItem?> FindAllByQueryFiltersAsync(IEnumerable<SearchQuery> queries, DomainItemType type = DomainItemType.User)
@@ -116,7 +116,7 @@ public class DomainSearcher : IDomainSearcher
             var searchResult = DomainSearcherEngine.FindAllItemsAsync(directorySearcher, type);
             
             await foreach (var item in searchResult)
-                yield return _domainItemFactory.CreateInstance(item ?? throw new InvalidOperationException(), type);
+                yield return _domainItemFactory.CreateInstance(item, type);
         }
     }
 
@@ -130,7 +130,7 @@ public class DomainSearcher : IDomainSearcher
         var searchResult = DomainSearcherEngine.FindAllItemsAsync(directorySearcher, DomainItemType.Group);
 
         await foreach (var item in searchResult)
-            yield return _domainItemFactory.CreateInstance(item ?? throw new InvalidOperationException(), DomainItemType.Group).ToGroup();
+            yield return _domainItemFactory.CreateInstance(item, DomainItemType.Group).ToGroup();
     }
 
     public async IAsyncEnumerable<UserItem?> FindGroupUsersAsync(GroupItem group, SearchQuery? searchQuery = null)
