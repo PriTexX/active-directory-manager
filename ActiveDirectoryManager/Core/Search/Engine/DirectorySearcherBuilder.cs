@@ -14,7 +14,7 @@ internal class DirectorySearcherBuilder
         _filterBuilder = filterBuilder;
     }
 
-    public DirectorySearcher CreateInstance(PrincipalContext context, DomainItemType domainItemType, QueryFilter queryFilter, string[] propertiesToLoad)
+    public DirectorySearcher CreateInstance(PrincipalContext context, DomainItemType domainItemType, string queryFilter, string[] propertiesToLoad)
     {
         var directorySearcher = (DirectorySearcher)GetPrincipalSearcher(context).GetUnderlyingSearcher();
         

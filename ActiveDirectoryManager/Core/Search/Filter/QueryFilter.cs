@@ -2,39 +2,51 @@
 
 namespace ActiveDirectoryManager.Core.Search.Filter;
 
-internal class QueryFilter
+internal sealed class QueryFilter
 {
-    protected readonly Dictionary<string, string?> PropertyCollection = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<string, List<string>?> _propertyCollection = new(StringComparer.OrdinalIgnoreCase);
 
-    public string? Name { get => GetProperty("name"); set => SetProperty("name", value); }
-    public string? SamAccountName { get => GetProperty("samaccountname"); set => SetProperty("samaccountname", value); }
-    public string? DistinguishedName { get => GetProperty("distinguishedname"); set => SetProperty("distinguishedname", value); }
-    public string? FirstName { get => GetProperty("givenname"); set => SetProperty("givenname", value); }
-    public string? Surname { get => GetProperty("sn"); set => SetProperty("sn", value); }
-    public string? UserPrincipalName { get => GetProperty("userprincipalname"); set => SetProperty("userprincipalname", value); }
-    public string? EmployeeNumber { get => GetProperty("employeenumber"); set => SetProperty("employeenumber", value); }
-    public string? DisplayName { get => GetProperty("displayname"); set => SetProperty("displayname", value); }
+    public List<string>? Name { get => GetProperty("name"); set => SetProperty("name", value); }
+    public List<string>? SamAccountName { get => GetProperty("samaccountname"); set => SetProperty("samaccountname", value); }
+    public List<string>? DistinguishedName { get => GetProperty("distinguishedname"); set => SetProperty("distinguishedname", value); }
+    public List<string>? FirstName { get => GetProperty("givenname"); set => SetProperty("givenname", value); }
+    public List<string>? Surname { get => GetProperty("sn"); set => SetProperty("sn", value); }
+    public List<string>? UserPrincipalName { get => GetProperty("userprincipalname"); set => SetProperty("userprincipalname", value); }
+    public List<string>? EmployeeNumber { get => GetProperty("employeenumber"); set => SetProperty("employeenumber", value); }
+    public List<string>? DisplayName { get => GetProperty("displayname"); set => SetProperty("displayname", value); }
 
-    public string? GetProperty(string key)
+    public List<string>? GetProperty(string key)
     {
-        PropertyCollection.TryGetValue(key, out var prop);
+        _propertyCollection.TryGetValue(key, out var prop);
         return prop;
     }
 
-    public void SetProperty(string key, string? value)
+    public void SetProperty(string key, List<string>? value)
     {
-        var success = PropertyCollection.TryAdd(key, value);
+        var success = _propertyCollection.TryAdd(key, value);
         if (!success)
-            PropertyCollection[key] = value;
+            _propertyCollection[key] = value;
     }
 
-    public virtual string ToStringFilter()
+    public string ToStringFilter()
     {
         var filter = new StringBuilder("(&");
         
-        foreach (var pair in PropertyCollection.Where(pair => pair.Value is not null))
+        foreach (var pair in _propertyCollection.Where(pair => pair.Value is not null))
         {
-            filter.Append($"({pair.Key}={pair.Value})");
+            if (pair.Value.Count > 1)
+            {
+                filter.Append("(|");
+                foreach (var value in pair.Value)
+                {
+                    filter.Append($"({pair.Key}={value})");    
+                }
+                filter.Append(')');
+            }
+            else
+            {
+                filter.Append($"({pair.Key}={pair.Value[0]})");   
+            }
         }
         
         filter.Append(')');

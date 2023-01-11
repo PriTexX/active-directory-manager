@@ -3,7 +3,7 @@ using ActiveDirectoryManager.Core.Search.PropertiesLoader;
 
 namespace ActiveDirectoryManager.Core.Search.Common;
 
-public class SearchQuery
+public sealed class SearchQuery
 {
     private readonly PropertyLoader _propertyLoader = PropertyLoader.Empty();
     private readonly QueryFilter _queryFilter = QueryFilter.Empty();
@@ -27,13 +27,13 @@ public class SearchQuery
         return this;
     }
 
-    internal QueryFilter GetQueryFilter()
+    internal string GetQueryFilter()
     {
-        return _queryFilter;
+        return _queryFilter.ToStringFilter();
     }
 
-    internal PropertyLoader GetPropertyLoader()
+    internal string[] GetPropertiesToLoad(PropertiesToLoadResolver resolver)
     {
-        return  _propertyLoader;
+        return  resolver.Resolve(_propertyLoader);
     }
 }
