@@ -1,6 +1,6 @@
 ﻿namespace ActiveDirectoryManager.Core.Search.PropertiesLoader;
 
-internal class PropertyLoader
+internal sealed class PropertyLoader
 {
     internal readonly Dictionary<string, bool> PropertyCollection = new(StringComparer.OrdinalIgnoreCase);
 

@@ -5,7 +5,7 @@ using ActiveDirectoryManager.Core.Search.Filter;
 
 namespace ActiveDirectoryManager.Core.Search.Engine;
 
-internal class DirectorySearcherBuilder
+internal sealed class DirectorySearcherBuilder
 {
     private readonly FilterBuilder _filterBuilder;
 

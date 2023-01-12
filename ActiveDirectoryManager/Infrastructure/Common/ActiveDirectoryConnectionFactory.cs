@@ -3,7 +3,7 @@ using ActiveDirectoryManager.Application.Factories;
 
 namespace ActiveDirectoryManager.Infrastructure.Common;
 
-public class ActiveDirectoryConnectionFactory : IActiveDirectoryConnectionFactory
+public sealed class ActiveDirectoryConnectionFactory : IActiveDirectoryConnectionFactory
 {
     private readonly string _domain;
     private readonly string _username;

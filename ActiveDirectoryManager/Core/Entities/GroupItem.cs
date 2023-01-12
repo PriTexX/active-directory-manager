@@ -1,6 +1,6 @@
 ﻿namespace ActiveDirectoryManager.Core.Entities;
 
-public class GroupItem : DomainItem
+public sealed class GroupItem : DomainItem
 {
     public string? Info
     {

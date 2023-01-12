@@ -9,7 +9,7 @@ using ActiveDirectoryManager.Core.Search.PropertiesLoader;
 
 namespace ActiveDirectoryManager.Infrastructure.Common;
 
-public class DomainSearcher : IDomainSearcher
+public sealed class DomainSearcher : IDomainSearcher
 {
     private readonly IActiveDirectoryConnectionFactory _connectionFactory;
     private readonly IDomainItemFactory _domainItemFactory;

@@ -4,7 +4,7 @@ using ActiveDirectoryManager.Infrastructure.Common;
 
 namespace ActiveDirectoryManager.Infrastructure.Factories;
 
-public class ActiveDirectoryManagerFactory : IActiveDirectoryManagerFactory
+public sealed class ActiveDirectoryManagerFactory : IActiveDirectoryManagerFactory
 {
     private IActiveDirectoryManager? _activeDirectoryManager;
     private IDomainSearcher? _domainSearcher;

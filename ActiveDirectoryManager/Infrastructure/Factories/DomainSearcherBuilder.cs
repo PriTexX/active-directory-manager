@@ -8,7 +8,7 @@ using ActiveDirectoryManager.Infrastructure.Common;
 
 namespace ActiveDirectoryManager.Infrastructure.Factories;
 
-public class DomainSearcherBuilder : IDomainSearcherBuilder
+public sealed class DomainSearcherBuilder : IDomainSearcherBuilder
 {
     private IActiveDirectoryConnectionFactory? _connectionFactory;
     private IDomainItemFactory? _domainItemFactory;

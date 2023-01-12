@@ -3,7 +3,7 @@ using ActiveDirectoryManager.Core.Entities;
 
 namespace ActiveDirectoryManager.Core.Search.Filter;
 
-internal class FilterBuilder
+internal sealed class FilterBuilder
 {
     public string BuildSearchFilter(string searchQuery, DomainItemType type)
     {

@@ -1,6 +1,6 @@
 ﻿namespace ActiveDirectoryManager.Core.Entities;
 
-public class UserItem : DomainItem
+public sealed class UserItem : DomainItem
 {
     public bool? Enabled
     {

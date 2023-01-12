@@ -7,7 +7,7 @@ using ActiveDirectoryManager.Core.Entities;
 namespace ActiveDirectoryManager.Infrastructure.Factories;
 
 [SupportedOSPlatform("windows")]
-internal class DomainItemFactory : IDomainItemFactory
+internal sealed class DomainItemFactory : IDomainItemFactory
 {
     public DomainItem CreateInstance(SearchResult searchResult, DomainItemType type)
     {

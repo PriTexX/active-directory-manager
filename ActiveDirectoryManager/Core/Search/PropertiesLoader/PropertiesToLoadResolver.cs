@@ -1,6 +1,6 @@
 ﻿namespace ActiveDirectoryManager.Core.Search.PropertiesLoader;
 
-internal class PropertiesToLoadResolver
+internal sealed class PropertiesToLoadResolver
 {
     private string[] _propertiesToLoad = { "adspath", "distinguishedname", "name" };
     

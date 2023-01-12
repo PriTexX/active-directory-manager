@@ -1,6 +1,6 @@
 ﻿namespace ActiveDirectoryManager.Core.Search.PropertiesLoader;
 
-public class PropertyLoaderConfigurator
+public sealed class PropertyLoaderConfigurator
 {
     private readonly PropertyLoader _propertyLoader;
 

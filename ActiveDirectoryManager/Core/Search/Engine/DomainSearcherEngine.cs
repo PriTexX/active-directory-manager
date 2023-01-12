@@ -3,7 +3,7 @@ using ActiveDirectoryManager.Core.Entities;
 
 namespace ActiveDirectoryManager.Core.Search.Engine;
 
-internal class DomainSearcherEngine
+internal static class DomainSearcherEngine
 {
     public static SearchResult? FindOneItem(DirectorySearcher searcher, DomainItemType itemType)
     {
