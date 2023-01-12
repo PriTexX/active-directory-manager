@@ -14,9 +14,9 @@ public sealed class DomainSearcher : IDomainSearcher
     private readonly IActiveDirectoryConnectionFactory _connectionFactory;
     private readonly IDomainItemFactory _domainItemFactory;
     private readonly DirectorySearcherBuilder _directorySearcherBuilder; 
-    private readonly PropertiesToLoadResolver _propertiesToLoadResolver;
+    private readonly IPropertyResolver _propertiesToLoadResolver;
 
-    internal DomainSearcher(IDomainItemFactory domainItemFactory, IActiveDirectoryConnectionFactory connectionFactory, PropertiesToLoadResolver propertiesToLoadResolver, DirectorySearcherBuilder directorySearcherBuilder)
+    internal DomainSearcher(IDomainItemFactory domainItemFactory, IActiveDirectoryConnectionFactory connectionFactory, IPropertyResolver propertiesToLoadResolver, DirectorySearcherBuilder directorySearcherBuilder)
     {
         _domainItemFactory = domainItemFactory;
         _connectionFactory = connectionFactory;

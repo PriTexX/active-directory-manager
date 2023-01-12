@@ -1,4 +1,5 @@
-﻿using ActiveDirectoryManager.Application.Common;
+﻿using System.Runtime.Versioning;
+using ActiveDirectoryManager.Application.Common;
 using ActiveDirectoryManager.Application.Factories;
 using ActiveDirectoryManager.Core.Search.Common;
 using ActiveDirectoryManager.Core.Search.Engine;
@@ -8,12 +9,13 @@ using ActiveDirectoryManager.Infrastructure.Common;
 
 namespace ActiveDirectoryManager.Infrastructure.Factories;
 
+[SupportedOSPlatform("windows")]
 public sealed class DomainSearcherBuilder : IDomainSearcherBuilder
 {
     private IActiveDirectoryConnectionFactory? _connectionFactory;
     private IDomainItemFactory? _domainItemFactory;
     private readonly DirectorySearcherBuilder _directorySearcherBuilder = new (new FilterBuilder()); 
-    private readonly PropertiesToLoadResolver _propertiesToLoadResolver = new ();
+    private readonly IPropertyResolver _propertiesToLoadResolver = new PropertiesToLoadResolver();
 
     public IDomainSearcherBuilder SetStandardPropertiesToLoad(SearchQuery propertiesToLoad)
     {

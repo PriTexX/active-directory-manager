@@ -32,7 +32,7 @@ public sealed class SearchQuery
         return _queryFilter.ToStringFilter();
     }
 
-    internal string[] GetPropertiesToLoad(PropertiesToLoadResolver resolver)
+    internal string[] GetPropertiesToLoad(IPropertyResolver resolver)
     {
         return  resolver.Resolve(_propertyLoader);
     }

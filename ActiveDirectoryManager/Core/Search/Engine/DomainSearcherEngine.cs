@@ -1,6 +1,5 @@
 ﻿using System.DirectoryServices;
 using System.Runtime.Versioning;
-using ActiveDirectoryManager.Core.Entities;
 
 namespace ActiveDirectoryManager.Core.Search.Engine;
 
