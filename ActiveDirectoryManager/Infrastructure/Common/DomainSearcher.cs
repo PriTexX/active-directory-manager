@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.DirectoryServices;
+﻿using System.Runtime.Versioning;
 using ActiveDirectoryManager.Application.Common;
 using ActiveDirectoryManager.Application.Factories;
 using ActiveDirectoryManager.Core.Entities;
@@ -9,6 +8,7 @@ using ActiveDirectoryManager.Core.Search.PropertiesLoader;
 
 namespace ActiveDirectoryManager.Infrastructure.Common;
 
+[SupportedOSPlatform("windows")]
 public sealed class DomainSearcher : IDomainSearcher
 {
     private readonly IActiveDirectoryConnectionFactory _connectionFactory;
@@ -29,7 +29,7 @@ public sealed class DomainSearcher : IDomainSearcher
         var directorySearcher = _directorySearcherBuilder.CreateInstance(_connectionFactory.Connect(), type,
             searchQuery.GetQueryFilter(), searchQuery.GetPropertiesToLoad(_propertiesToLoadResolver));
         
-        var searchResult = DomainSearcherEngine.FindOneItem(directorySearcher, type);
+        var searchResult = DomainSearcherEngine.FindOneItem(directorySearcher);
 
         return searchResult is null ? null : _domainItemFactory.CreateInstance(searchResult, type);
     }
@@ -39,7 +39,7 @@ public sealed class DomainSearcher : IDomainSearcher
         var directorySearcher = _directorySearcherBuilder.CreateInstance(_connectionFactory.Connect(), type,
             searchQuery.GetQueryFilter(), searchQuery.GetPropertiesToLoad(_propertiesToLoadResolver));
         
-        var searchResult = DomainSearcherEngine.FindAllItems(directorySearcher, type);
+        var searchResult = DomainSearcherEngine.FindAllItems(directorySearcher);
         
         foreach (var item in searchResult)
             yield return item is null ? null : _domainItemFactory.CreateInstance(item, type);
@@ -52,7 +52,7 @@ public sealed class DomainSearcher : IDomainSearcher
         directorySearcher.Filter =
             $"(&(objectCategory=group)(member:1.2.840.113556.1.4.1941:={domainItem.DistinguishedName}))";
         
-        var searchResult = DomainSearcherEngine.FindAllItems(directorySearcher, DomainItemType.Group);
+        var searchResult = DomainSearcherEngine.FindAllItems(directorySearcher);
 
         foreach (var item in searchResult)
             yield return item is null ? null : _domainItemFactory.CreateInstance(item, DomainItemType.Group).ToGroup();
@@ -65,7 +65,7 @@ public sealed class DomainSearcher : IDomainSearcher
         directorySearcher.Filter =
             $"(&(sAMAccountType=805306368)(memberOf:1.2.840.113556.1.4.1941:={group.DistinguishedName}))";
         
-        var searchResult = DomainSearcherEngine.FindAllItems(directorySearcher, DomainItemType.User);
+        var searchResult = DomainSearcherEngine.FindAllItems(directorySearcher);
 
         foreach (var item in searchResult)
             yield return item is null ? null : _domainItemFactory.CreateInstance(item, DomainItemType.Group).ToUser();
@@ -76,7 +76,7 @@ public sealed class DomainSearcher : IDomainSearcher
         var directorySearcher = _directorySearcherBuilder.CreateInstance(await _connectionFactory.ConnectAsync(), type,
             searchQuery.GetQueryFilter(), searchQuery.GetPropertiesToLoad(_propertiesToLoadResolver));
         
-        var searchResult = await DomainSearcherEngine.FindOneItemAsync(directorySearcher, type);
+        var searchResult = await DomainSearcherEngine.FindOneItemAsync(directorySearcher);
 
         return searchResult is null ? null : _domainItemFactory.CreateInstance(searchResult, type);
     }
@@ -86,7 +86,7 @@ public sealed class DomainSearcher : IDomainSearcher
         var directorySearcher = _directorySearcherBuilder.CreateInstance(await _connectionFactory.ConnectAsync(), type,
             searchQuery.GetQueryFilter(), searchQuery.GetPropertiesToLoad(_propertiesToLoadResolver));
         
-        var searchResult = DomainSearcherEngine.FindAllItemsAsync(directorySearcher, type);
+        var searchResult = DomainSearcherEngine.FindAllItemsAsync(directorySearcher);
         
         await foreach (var item in searchResult)
             yield return item is null ? null : _domainItemFactory.CreateInstance(item, type);
@@ -99,7 +99,7 @@ public sealed class DomainSearcher : IDomainSearcher
         directorySearcher.Filter =
             $"(&(objectCategory=group)(member:1.2.840.113556.1.4.1941:={domainItem.DistinguishedName}))";
         
-        var searchResult = DomainSearcherEngine.FindAllItemsAsync(directorySearcher, DomainItemType.Group);
+        var searchResult = DomainSearcherEngine.FindAllItemsAsync(directorySearcher);
 
         await foreach (var item in searchResult)
             yield return item is null ? null : _domainItemFactory.CreateInstance(item, DomainItemType.Group).ToGroup();
@@ -112,7 +112,7 @@ public sealed class DomainSearcher : IDomainSearcher
         directorySearcher.Filter =
             $"(&(sAMAccountType=805306368)(memberOf:1.2.840.113556.1.4.1941:={group.DistinguishedName}))";
         
-        var searchResult = DomainSearcherEngine.FindAllItemsAsync(directorySearcher, DomainItemType.User);
+        var searchResult = DomainSearcherEngine.FindAllItemsAsync(directorySearcher);
 
         await foreach (var item in searchResult)
             yield return item is null ? null : _domainItemFactory.CreateInstance(item, DomainItemType.Group).ToUser();
