@@ -1,9 +1,8 @@
 ﻿namespace ActiveDirectoryManager.Core.Search.PropertiesLoader;
 
-internal sealed class PropertyLoader
+public sealed class PropertyLoader
 {
     internal readonly Dictionary<string, bool> PropertyCollection = new(StringComparer.OrdinalIgnoreCase);
-
     public bool GetProperty(string key)
     {
         PropertyCollection.TryGetValue(key, out var prop);
@@ -15,6 +14,11 @@ internal sealed class PropertyLoader
         var success = PropertyCollection.TryAdd(key, value);
         if (!success)
             PropertyCollection[key] = value;
+    }
+
+    public bool IsEmpty()
+    {
+        return PropertyCollection.Count > 0;
     }
 
     public bool SamAccountName { get => GetProperty("samaccountname"); set => SetProperty("samaccountname", value); }

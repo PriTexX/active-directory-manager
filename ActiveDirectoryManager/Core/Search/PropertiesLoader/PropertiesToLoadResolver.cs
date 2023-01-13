@@ -11,6 +11,6 @@ internal sealed class PropertiesToLoadResolver : IPropertyResolver
 
     public string[] Resolve(PropertyLoader? propertyLoader)
     {
-        return propertyLoader is null ? _propertiesToLoad : (from pair in propertyLoader.PropertyCollection where pair.Value select pair.Key).ToArray<string>();
+        return propertyLoader is null || propertyLoader.IsEmpty() ? _propertiesToLoad : (from pair in propertyLoader.PropertyCollection where pair.Value select pair.Key).ToArray<string>();
     }
 }
