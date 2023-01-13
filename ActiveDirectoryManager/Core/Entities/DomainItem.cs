@@ -1,8 +1,9 @@
 ﻿using System.DirectoryServices;
-using System.Text.RegularExpressions;
+using System.Runtime.Versioning;
 
 namespace ActiveDirectoryManager.Core.Entities;
 
+[SupportedOSPlatform("windows")]
 public abstract class DomainItem
 {
     internal DirectoryEntry? DirectoryEntry;
@@ -89,12 +90,17 @@ public abstract class DomainItem
         return DirectoryEntry ??= SearchResult.GetDirectoryEntry();
     }
 
-    public GroupItem ToGroup()
+    public ContainerItem AsContainer()
+    {
+        return (ContainerItem)this;
+    }
+    
+    public GroupItem AsGroup()
     {
         return (GroupItem)this;
     }
 
-    public UserItem ToUser()
+    public UserItem AsUser()
     {
         return (UserItem)this;
     }

@@ -1,6 +1,9 @@
-﻿namespace ActiveDirectoryManager.Core.Entities;
+﻿using System.Runtime.Versioning;
 
-public class ContainerItem : DomainItem
+namespace ActiveDirectoryManager.Core.Entities;
+
+[SupportedOSPlatform("windows")]
+public sealed class ContainerItem : DomainItem
 {
     
 }

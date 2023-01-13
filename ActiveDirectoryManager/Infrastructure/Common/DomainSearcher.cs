@@ -57,7 +57,7 @@ public sealed class DomainSearcher : IDomainSearcher
         var searchResult = DomainSearcherEngine.FindAllItems(directorySearcher);
 
         foreach (var item in searchResult)
-            yield return item is null ? null : _domainItemFactory.CreateInstance(item, DomainItemType.Group).ToGroup();
+            yield return item is null ? null : _domainItemFactory.CreateInstance(item, DomainItemType.Group).AsGroup();
     }
 
     public IEnumerable<UserItem?> FindGroupUsers(GroupItem group, SearchQuery? searchQuery = null)
@@ -70,7 +70,7 @@ public sealed class DomainSearcher : IDomainSearcher
         var searchResult = DomainSearcherEngine.FindAllItems(directorySearcher);
 
         foreach (var item in searchResult)
-            yield return item is null ? null : _domainItemFactory.CreateInstance(item, DomainItemType.Group).ToUser();
+            yield return item is null ? null : _domainItemFactory.CreateInstance(item, DomainItemType.Group).AsUser();
     }
 
     public async Task<DomainItem?> FindOneAsync(SearchQuery searchQuery, DomainItemType type = DomainItemType.User)
@@ -103,7 +103,7 @@ public sealed class DomainSearcher : IDomainSearcher
         var searchResult = DomainSearcherEngine.FindAllItemsAsync(directorySearcher);
 
         await foreach (var item in searchResult)
-            yield return item is null ? null : _domainItemFactory.CreateInstance(item, DomainItemType.Group).ToGroup();
+            yield return item is null ? null : _domainItemFactory.CreateInstance(item, DomainItemType.Group).AsGroup();
     }
 
     public async IAsyncEnumerable<UserItem?> FindGroupUsersAsync(GroupItem group, SearchQuery? searchQuery = null)
@@ -115,6 +115,6 @@ public sealed class DomainSearcher : IDomainSearcher
         var searchResult = DomainSearcherEngine.FindAllItemsAsync(directorySearcher);
 
         await foreach (var item in searchResult)
-            yield return item is null ? null : _domainItemFactory.CreateInstance(item, DomainItemType.Group).ToUser();
+            yield return item is null ? null : _domainItemFactory.CreateInstance(item, DomainItemType.Group).AsUser();
     }
 }

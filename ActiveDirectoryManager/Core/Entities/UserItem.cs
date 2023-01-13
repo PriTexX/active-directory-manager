@@ -1,5 +1,8 @@
-﻿namespace ActiveDirectoryManager.Core.Entities;
+﻿using System.Runtime.Versioning;
 
+namespace ActiveDirectoryManager.Core.Entities;
+
+[SupportedOSPlatform("windows")]
 public sealed class UserItem : DomainItem
 {
     public bool? Enabled
