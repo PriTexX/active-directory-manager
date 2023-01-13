@@ -19,7 +19,7 @@ public sealed class DomainSearcherBuilder : IDomainSearcherBuilder
 
     public IDomainSearcherBuilder SetStandardPropertiesToLoad(SearchQuery propertiesToLoad)
     {
-        _propertiesToLoadResolver.SetStandardPropertiesToLoad(propertiesToLoad.GetPropertiesToLoad(_propertiesToLoadResolver));
+        _propertiesToLoadResolver.SetStandardPropertiesToLoad(_propertiesToLoadResolver.Resolve(propertiesToLoad.GetPropertyLoader()));
         return this;
     }
 

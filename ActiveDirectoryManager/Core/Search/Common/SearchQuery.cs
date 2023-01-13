@@ -32,8 +32,8 @@ public sealed class SearchQuery
         return _queryFilter.ToStringFilter();
     }
 
-    internal string[] GetPropertiesToLoad(IPropertyResolver resolver)
+    internal PropertyLoader GetPropertyLoader()
     {
-        return  resolver.Resolve(_propertyLoader);
+        return  _propertyLoader;
     }
 }
