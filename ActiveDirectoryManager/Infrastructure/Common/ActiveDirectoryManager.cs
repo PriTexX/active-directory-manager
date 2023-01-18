@@ -4,7 +4,7 @@ using ActiveDirectoryManager.Core.Entities;
 
 namespace ActiveDirectoryManager.Infrastructure.Common;
 
-public sealed class ActiveDirectoryManager : IActiveDirectoryManager
+public sealed class ActiveDirectoryManager : IActiveDirectoryManager // TODO: Сделать возможность делать ретрай операций
 {
     private IActiveDirectoryConnectionFactory _connectionFactory;
 
@@ -13,54 +13,93 @@ public sealed class ActiveDirectoryManager : IActiveDirectoryManager
         _connectionFactory = connectionFactory;
     }
 
+    public async Task AddToGroupAsync(DomainItem item, GroupItem groupItem)
+    {
+        await Task.Run(() => AddToGroup(item, groupItem));
+    }
+    
     public void AddToGroup(DomainItem item, GroupItem groupItem)
     {
-        throw new NotImplementedException();
+        try
+        {
+            groupItem.GetUnderlyingObject().Properties["member"].Add(item);
+            groupItem.Save();
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
     }
 
-    public Task AddToGroupAsync(DomainItem item, GroupItem groupItem)
+    public async Task RemoveFromGroupAsync(DomainItem item, GroupItem groupItem)
     {
-        throw new NotImplementedException();
+        await Task.Run(() => RemoveFromGroup(item, groupItem));
     }
-
+    
     public void RemoveFromGroup(DomainItem item, GroupItem groupItem)
     {
-        throw new NotImplementedException();
+        try
+        {
+            groupItem.GetUnderlyingObject().Properties["member"].Remove(item);
+            groupItem.Save();
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
     }
 
-    public Task RemoveFromGroupAsync(DomainItem item, GroupItem groupItem)
+    public async Task RenameAsync(DomainItem item, string newName)
     {
-        throw new NotImplementedException();
+        await Task.Run(() => Rename(item, newName));
     }
-
-    public void Rename(DomainItem item)
+    
+    public void Rename(DomainItem item, string newName)
     {
-        throw new NotImplementedException();
+        try
+        {
+            item.GetUnderlyingObject().Rename("CN=" + newName);
+            item.GetUnderlyingObject().Rename("CN=" + newName);
+            item.GetUnderlyingObject().RefreshCache(new []{"distinguishedname"});
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
     }
 
-    public Task RenameAsync(DomainItem item)
+    public async Task MoveToAsync(DomainItem item, ContainerItem containerItem)
     {
-        throw new NotImplementedException();
+        await Task.Run(() => MoveTo(item, containerItem));
     }
-
+    
     public void MoveTo(DomainItem item, ContainerItem containerItem)
     {
-        throw new NotImplementedException();
+        try
+        {
+            item.GetUnderlyingObject().MoveTo(containerItem.GetUnderlyingObject(), item.GetUnderlyingObject().Name);
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
     }
 
-    public Task MoveToAsync(DomainItem item, ContainerItem containerItem)
+    public async Task CopyToAsync(DomainItem item, ContainerItem containerItem)
     {
-        throw new NotImplementedException();
+        await Task.Run(() => CopyTo(item, containerItem));
     }
-
+    
     public void CopyTo(DomainItem item, ContainerItem containerItem)
     {
-        throw new NotImplementedException();
-    }
-
-    public Task CopyToAsync(DomainItem item, ContainerItem containerItem)
-    {
-        throw new NotImplementedException();
+        try
+        {
+            item.GetUnderlyingObject().CopyTo(containerItem.GetUnderlyingObject());
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
     }
 
     public UserItem CreateUser(ContainerItem directory, string name, string userPassword)
