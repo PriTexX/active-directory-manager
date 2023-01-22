@@ -1,5 +1,6 @@
 ﻿using ActiveDirectoryManager.Application.Common;
 using ActiveDirectoryManager.Application.Factories;
+using ActiveDirectoryManager.Core.Search.PropertiesLoader;
 using ActiveDirectoryManager.Infrastructure.Common;
 
 namespace ActiveDirectoryManager.Infrastructure.Factories;
@@ -10,15 +11,19 @@ public sealed class ActiveDirectoryManagerFactory : IActiveDirectoryManagerFacto
     private IDomainSearcher? _domainSearcher;
     private IActiveDirectoryConnectionFactory? _connectionFactory;
     private IDomainSearcherBuilder _domainSearcherBuilder;
+    private IPropertyResolver _propertiesToLoadResolver;
+    private readonly IDomainItemFactory _domainItemFactory;
 
-    public ActiveDirectoryManagerFactory(IDomainSearcherBuilder domainSearcherBuilder)
+    internal ActiveDirectoryManagerFactory(IDomainSearcherBuilder domainSearcherBuilder, IPropertyResolver propertiesToLoadResolver, IDomainItemFactory domainItemFactory)
     {
         _domainSearcherBuilder = domainSearcherBuilder;
+        _propertiesToLoadResolver = propertiesToLoadResolver;
+        _domainItemFactory = domainItemFactory;
     }
 
     public static ActiveDirectoryManagerFactory Create()
     {
-        return new ActiveDirectoryManagerFactory(new DomainSearcherBuilder());
+        return new ActiveDirectoryManagerFactory(new DomainSearcherBuilder(), new PropertiesToLoadResolver(), new DomainItemFactory());
     }
 
     public IActiveDirectoryManagerFactory SetConnectionOptions(string domain, string user, string password)
@@ -39,7 +44,7 @@ public sealed class ActiveDirectoryManagerFactory : IActiveDirectoryManagerFacto
         if (_connectionFactory is null)
             throw new ArgumentException("Connection options must be specified.");
 
-        _activeDirectoryManager = new Infrastructure.Common.ActiveDirectoryManager(_connectionFactory);
+        _activeDirectoryManager = new Infrastructure.Common.ActiveDirectoryManager(_connectionFactory, _domainItemFactory, _propertiesToLoadResolver);
 
         _domainSearcher = _domainSearcherBuilder
             .SetConnectionFactory(_connectionFactory)

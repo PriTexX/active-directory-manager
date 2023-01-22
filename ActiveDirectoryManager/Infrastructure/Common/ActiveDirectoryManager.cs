@@ -1,16 +1,24 @@
-﻿using ActiveDirectoryManager.Application.Common;
+﻿using System.DirectoryServices;
+using System.Reflection.Metadata.Ecma335;
+using ActiveDirectoryManager.Application.Common;
 using ActiveDirectoryManager.Application.Factories;
 using ActiveDirectoryManager.Core.Entities;
+using ActiveDirectoryManager.Core.Search.Common;
+using ActiveDirectoryManager.Core.Search.PropertiesLoader;
 
 namespace ActiveDirectoryManager.Infrastructure.Common;
 
 public sealed class ActiveDirectoryManager : IActiveDirectoryManager // TODO: Сделать возможность делать ретрай операций
 {
-    private IActiveDirectoryConnectionFactory _connectionFactory;
+    private readonly IActiveDirectoryConnectionFactory _connectionFactory;
+    private readonly IPropertyResolver _propertiesToLoadResolver;
+    private readonly IDomainItemFactory _domainItemFactory;
 
-    public ActiveDirectoryManager(IActiveDirectoryConnectionFactory connectionFactory)
+    internal ActiveDirectoryManager(IActiveDirectoryConnectionFactory connectionFactory, IDomainItemFactory domainItemFactory, IPropertyResolver propertiesToLoadResolver)
     {
         _connectionFactory = connectionFactory;
+        _domainItemFactory = domainItemFactory;
+        _propertiesToLoadResolver = propertiesToLoadResolver;
     }
 
     public async Task AddToGroupAsync(DomainItem item, GroupItem groupItem)
@@ -101,34 +109,91 @@ public sealed class ActiveDirectoryManager : IActiveDirectoryManager // TODO: С
             throw e;
         }
     }
-
-    public UserItem CreateUser(ContainerItem directory, string name, string userPassword)
+    
+    public async Task<UserItem> CreateUserAsync(ContainerItem directory, string name, string userPassword, SearchQuery propsToLoad = null)
     {
-        throw new NotImplementedException();
+        var user = await Task.Run(() => CreateUser(directory, name, userPassword, propsToLoad));
+        return user;
+    }
+    
+    public UserItem CreateUser(ContainerItem directory, string name, string userPassword, SearchQuery propsToLoad = null)
+    {
+        DirectoryEntry newUser;
+        try
+        {
+            newUser = directory.GetUnderlyingObject().Children.Add($"CN={name}", "user");
+            newUser.CommitChanges();
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
+
+        try
+        {
+            newUser.Properties["userAccountControl"].Value = 0x0002;
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
+
+        newUser.Invoke("SetPassword", userPassword);
+        try
+        {
+            newUser.CommitChanges();
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
+        
+        return _domainItemFactory.CreateInstance(newUser, DomainItemType.User, _propertiesToLoadResolver.Resolve(propsToLoad.GetPropertyLoader())).AsUser();
     }
 
-    public ContainerItem CreateContainer(ContainerItem directory, string name)
+    public async Task<ContainerItem> CreateContainerAsync(ContainerItem directory, string name, SearchQuery propsToLoad = null)
     {
-        throw new NotImplementedException();
+        var container = await Task.Run(() => CreateContainer(directory, name, propsToLoad));
+        return container;
+    }
+    
+    public ContainerItem CreateContainer(ContainerItem directory, string name, SearchQuery propsToLoad = null)
+    {
+        DirectoryEntry newContainer;
+        try
+        {
+            newContainer = directory.GetUnderlyingObject()
+                .Children.Add($"OU={name}", "organizationalUnit");
+            newContainer.CommitChanges();
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
+
+        return _domainItemFactory.CreateInstance(newContainer, DomainItemType.Container, _propertiesToLoadResolver.Resolve(propsToLoad.GetPropertyLoader())).AsContainer();
     }
 
-    public GroupItem CreateGroup(ContainerItem directory, string name)
+    public async Task<GroupItem> CreateGroupAsync(ContainerItem directory, string name, SearchQuery propsToLoad = null)
     {
-        throw new NotImplementedException();
+        var group = await Task.Run(() => CreateGroup(directory, name, propsToLoad));
+        return group;
     }
 
-    public Task<UserItem> CreateUserAsync(ContainerItem directory, string name, string userPassword)
+    public GroupItem CreateGroup(ContainerItem directory, string name, SearchQuery propsToLoad = null)
     {
-        throw new NotImplementedException();
-    }
+        DirectoryEntry newGroup;
+        try
+        {
+            newGroup = directory.GetUnderlyingObject()
+                .Children.Add($"CN={name}", "group");
+            newGroup.CommitChanges();
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
 
-    public Task<ContainerItem> CreateContainerAsync(ContainerItem directory, string name)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<GroupItem> CreateGroupAsync(ContainerItem directory, string name)
-    {
-        throw new NotImplementedException();
+        return _domainItemFactory.CreateInstance(newGroup, DomainItemType.Group, _propertiesToLoadResolver.Resolve(propsToLoad.GetPropertyLoader())).AsGroup();
     }
 }

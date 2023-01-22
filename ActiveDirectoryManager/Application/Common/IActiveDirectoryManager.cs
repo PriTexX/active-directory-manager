@@ -1,4 +1,5 @@
 ﻿using ActiveDirectoryManager.Core.Entities;
+using ActiveDirectoryManager.Core.Search.Common;
 
 namespace ActiveDirectoryManager.Application.Common;
 
@@ -24,11 +25,11 @@ public interface IActiveDirectoryManager
     
     public void CopyTo(DomainItem item, ContainerItem containerItem);
 
-    public UserItem CreateUser(ContainerItem directory, string name, string userPassword);
-    public ContainerItem CreateContainer(ContainerItem directory, string name);
-    public GroupItem CreateGroup(ContainerItem directory, string name);
+    public UserItem CreateUser(ContainerItem directory, string name, string userPassword, SearchQuery propsToLoad = null);
+    public ContainerItem CreateContainer(ContainerItem directory, string name, SearchQuery propsToLoad = null);
+    public GroupItem CreateGroup(ContainerItem directory, string name, SearchQuery propsToLoad = null);
     
-    public Task<UserItem> CreateUserAsync(ContainerItem directory, string name, string userPassword);
-    public Task<ContainerItem> CreateContainerAsync(ContainerItem directory, string name);
-    public Task<GroupItem> CreateGroupAsync(ContainerItem directory, string name);
+    public Task<UserItem> CreateUserAsync(ContainerItem directory, string name, string userPassword, SearchQuery propsToLoad = null);
+    public Task<ContainerItem> CreateContainerAsync(ContainerItem directory, string name, SearchQuery propsToLoad = null);
+    public Task<GroupItem> CreateGroupAsync(ContainerItem directory, string name, SearchQuery propsToLoad = null);
 }
