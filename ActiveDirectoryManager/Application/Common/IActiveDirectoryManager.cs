@@ -22,8 +22,10 @@ public interface IActiveDirectoryManager
     public void MoveTo(DomainItem item, ContainerItem containerItem);
     
     public Task CopyToAsync(DomainItem item, ContainerItem containerItem);
+    public Task CopyToAsync(DomainItem item, ContainerItem containerItem, string newName);
     
     public void CopyTo(DomainItem item, ContainerItem containerItem);
+    public void CopyTo(DomainItem item, ContainerItem containerItem, string newName);
 
     public UserItem CreateUser(ContainerItem directory, string name, string userPassword, SearchQuery propsToLoad = null);
     public ContainerItem CreateContainer(ContainerItem directory, string name, SearchQuery propsToLoad = null);

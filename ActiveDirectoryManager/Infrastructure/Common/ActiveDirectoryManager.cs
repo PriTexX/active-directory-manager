@@ -28,7 +28,7 @@ public sealed class ActiveDirectoryManager : IActiveDirectoryManager // TODO: С
     
     public void AddToGroup(DomainItem item, GroupItem groupItem)
     {
-        groupItem.GetUnderlyingObject().Properties["member"].Add(item);
+        groupItem.GetUnderlyingObject().Properties["member"].Add(item.DistinguishedName);
         groupItem.Save();
     }
 
@@ -39,7 +39,7 @@ public sealed class ActiveDirectoryManager : IActiveDirectoryManager // TODO: С
     
     public void RemoveFromGroup(DomainItem item, GroupItem groupItem)
     {
-        groupItem.GetUnderlyingObject().Properties["member"].Remove(item);
+        groupItem.GetUnderlyingObject().Properties["member"].Remove(item.DistinguishedName);
         groupItem.Save();
     }
 
@@ -51,8 +51,14 @@ public sealed class ActiveDirectoryManager : IActiveDirectoryManager // TODO: С
     public void Rename(DomainItem item, string newName)
     {
         item.GetUnderlyingObject().Rename("CN=" + newName);
-        item.GetUnderlyingObject().Rename("CN=" + newName);
         item.GetUnderlyingObject().RefreshCache(new []{"distinguishedname"});
+        
+        item.DistinguishedName = item.GetUnderlyingObject().Properties["distinguishedname"].Value!.ToString()!;
+            
+        if (item.PropertyCollection.ContainsKey("name"))
+        {
+            item.PropertyCollection["name"][0] = newName;
+        }
     }
 
     public async Task MoveToAsync(DomainItem item, ContainerItem containerItem)
@@ -63,18 +69,30 @@ public sealed class ActiveDirectoryManager : IActiveDirectoryManager // TODO: С
     public void MoveTo(DomainItem item, ContainerItem containerItem)
     {
         item.GetUnderlyingObject().MoveTo(containerItem.GetUnderlyingObject(), item.GetUnderlyingObject().Name);
+        item.GetUnderlyingObject().RefreshCache(new []{"distinguishedname"});
+        item.DistinguishedName = item.GetUnderlyingObject().Properties["distinguishedname"].Value!.ToString()!;
     }
 
     public async Task CopyToAsync(DomainItem item, ContainerItem containerItem)
     {
         await Task.Run(() => CopyTo(item, containerItem));
     }
-    
+
+    public async Task CopyToAsync(DomainItem item, ContainerItem containerItem, string newName)
+    {
+        await Task.Run(() => CopyTo(item, containerItem, newName));
+    }
+
     public void CopyTo(DomainItem item, ContainerItem containerItem)
     {
         item.GetUnderlyingObject().CopyTo(containerItem.GetUnderlyingObject());
     }
-    
+
+    public void CopyTo(DomainItem item, ContainerItem containerItem, string newName)
+    {
+        item.GetUnderlyingObject().CopyTo(containerItem.GetUnderlyingObject(), newName);
+    }
+
     public async Task<UserItem> CreateUserAsync(ContainerItem directory, string name, string userPassword, SearchQuery? propsToLoad = null)
     {
         var user = await Task.Run(() => CreateUser(directory, name, userPassword, propsToLoad));
@@ -91,7 +109,7 @@ public sealed class ActiveDirectoryManager : IActiveDirectoryManager // TODO: С
         newUser.Invoke("SetPassword", userPassword);
         newUser.CommitChanges();
         
-        return _domainItemFactory.CreateInstance(newUser, DomainItemType.User, _propertiesToLoadResolver.Resolve(propsToLoad.GetPropertyLoader())).AsUser();
+        return _domainItemFactory.CreateInstance(newUser, DomainItemType.User, _propertiesToLoadResolver.Resolve(propsToLoad?.GetPropertyLoader())).AsUser();
     }
 
     public async Task<ContainerItem> CreateContainerAsync(ContainerItem directory, string name, SearchQuery? propsToLoad = null)
@@ -107,10 +125,10 @@ public sealed class ActiveDirectoryManager : IActiveDirectoryManager // TODO: С
         newContainer.CommitChanges();
         
 
-        return _domainItemFactory.CreateInstance(newContainer, DomainItemType.Container, _propertiesToLoadResolver.Resolve(propsToLoad.GetPropertyLoader())).AsContainer();
+        return _domainItemFactory.CreateInstance(newContainer, DomainItemType.Container, _propertiesToLoadResolver.Resolve(propsToLoad?.GetPropertyLoader())).AsContainer();
     }
 
-    public async Task<GroupItem> CreateGroupAsync(ContainerItem directory, string name, SearchQuery propsToLoad = null)
+    public async Task<GroupItem> CreateGroupAsync(ContainerItem directory, string name, SearchQuery? propsToLoad = null)
     {
         var group = await Task.Run(() => CreateGroup(directory, name, propsToLoad));
         return group;
@@ -122,6 +140,6 @@ public sealed class ActiveDirectoryManager : IActiveDirectoryManager // TODO: С
             .Children.Add($"CN={name}", "group");
         newGroup.CommitChanges();
        
-        return _domainItemFactory.CreateInstance(newGroup, DomainItemType.Group, _propertiesToLoadResolver.Resolve(propsToLoad.GetPropertyLoader())).AsGroup();
+        return _domainItemFactory.CreateInstance(newGroup, DomainItemType.Group, _propertiesToLoadResolver.Resolve(propsToLoad?.GetPropertyLoader())).AsGroup();
     }
 }
