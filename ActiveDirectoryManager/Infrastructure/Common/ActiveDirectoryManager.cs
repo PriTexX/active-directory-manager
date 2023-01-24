@@ -1,21 +1,18 @@
-﻿using System.DirectoryServices;
-using System.Reflection.Metadata.Ecma335;
+﻿using System.Runtime.Versioning;
 using ActiveDirectoryManager.Application.Common;
 using ActiveDirectoryManager.Application.Factories;
-using ActiveDirectoryManager.Core.DirEntry;
 using ActiveDirectoryManager.Core.Entities;
 using ActiveDirectoryManager.Core.Search.Common;
-using ActiveDirectoryManager.Core.Search.Engine;
 using ActiveDirectoryManager.Core.Search.PropertiesLoader;
 
 namespace ActiveDirectoryManager.Infrastructure.Common;
 
+[SupportedOSPlatform("windows")]
 public sealed class ActiveDirectoryManager : IActiveDirectoryManager // TODO: Сделать возможность делать ретрай операций
 {
     private readonly IActiveDirectoryConnectionFactory _connectionFactory;
     private readonly IPropertyResolver _propertiesToLoadResolver;
     private readonly IDomainItemFactory _domainItemFactory;
-    private readonly DirectoryEntryBuilder _directoryEntryBuilder = new DirectoryEntryBuilder();
 
     internal ActiveDirectoryManager(IActiveDirectoryConnectionFactory connectionFactory, IDomainItemFactory domainItemFactory, IPropertyResolver propertiesToLoadResolver)
     {
@@ -31,15 +28,8 @@ public sealed class ActiveDirectoryManager : IActiveDirectoryManager // TODO: С
     
     public void AddToGroup(DomainItem item, GroupItem groupItem)
     {
-        try
-        {
-            groupItem.GetUnderlyingObject().Properties["member"].Add(item);
-            groupItem.Save();
-        }
-        catch (Exception e)
-        {
-            throw e;
-        }
+        groupItem.GetUnderlyingObject().Properties["member"].Add(item);
+        groupItem.Save();
     }
 
     public async Task RemoveFromGroupAsync(DomainItem item, GroupItem groupItem)
@@ -49,15 +39,8 @@ public sealed class ActiveDirectoryManager : IActiveDirectoryManager // TODO: С
     
     public void RemoveFromGroup(DomainItem item, GroupItem groupItem)
     {
-        try
-        {
-            groupItem.GetUnderlyingObject().Properties["member"].Remove(item);
-            groupItem.Save();
-        }
-        catch (Exception e)
-        {
-            throw e;
-        }
+        groupItem.GetUnderlyingObject().Properties["member"].Remove(item);
+        groupItem.Save();
     }
 
     public async Task RenameAsync(DomainItem item, string newName)
@@ -67,16 +50,9 @@ public sealed class ActiveDirectoryManager : IActiveDirectoryManager // TODO: С
     
     public void Rename(DomainItem item, string newName)
     {
-        try
-        {
-            item.GetUnderlyingObject().Rename("CN=" + newName);
-            item.GetUnderlyingObject().Rename("CN=" + newName);
-            item.GetUnderlyingObject().RefreshCache(new []{"distinguishedname"});
-        }
-        catch (Exception e)
-        {
-            throw e;
-        }
+        item.GetUnderlyingObject().Rename("CN=" + newName);
+        item.GetUnderlyingObject().Rename("CN=" + newName);
+        item.GetUnderlyingObject().RefreshCache(new []{"distinguishedname"});
     }
 
     public async Task MoveToAsync(DomainItem item, ContainerItem containerItem)
@@ -86,14 +62,7 @@ public sealed class ActiveDirectoryManager : IActiveDirectoryManager // TODO: С
     
     public void MoveTo(DomainItem item, ContainerItem containerItem)
     {
-        try
-        {
-            item.GetUnderlyingObject().MoveTo(containerItem.GetUnderlyingObject(), item.GetUnderlyingObject().Name);
-        }
-        catch (Exception e)
-        {
-            throw e;
-        }
+        item.GetUnderlyingObject().MoveTo(containerItem.GetUnderlyingObject(), item.GetUnderlyingObject().Name);
     }
 
     public async Task CopyToAsync(DomainItem item, ContainerItem containerItem)
@@ -103,40 +72,40 @@ public sealed class ActiveDirectoryManager : IActiveDirectoryManager // TODO: С
     
     public void CopyTo(DomainItem item, ContainerItem containerItem)
     {
-        try
-        {
-            item.GetUnderlyingObject().CopyTo(containerItem.GetUnderlyingObject());
-        }
-        catch (Exception e)
-        {
-            throw e;
-        }
+        item.GetUnderlyingObject().CopyTo(containerItem.GetUnderlyingObject());
     }
     
-    public async Task<UserItem> CreateUserAsync(ContainerItem directory, string name, string userPassword, SearchQuery propsToLoad = null)
+    public async Task<UserItem> CreateUserAsync(ContainerItem directory, string name, string userPassword, SearchQuery? propsToLoad = null)
     {
         var user = await Task.Run(() => CreateUser(directory, name, userPassword, propsToLoad));
         return user;
     }
     
-    public UserItem CreateUser(ContainerItem directory, string name, string userPassword, SearchQuery propsToLoad = null)
+    public UserItem CreateUser(ContainerItem directory, string name, string userPassword, SearchQuery? propsToLoad = null)
     {
-        var newUser = _directoryEntryBuilder.SetType(DirectoryEntryType.user).SetName(directory, name)
-            .SetProperty("userAccountControl", userPassword).SetPassword(userPassword).Build();
-
+        var newUser = directory.GetUnderlyingObject().Children.Add($"CN={name}", "user");
+        newUser.CommitChanges();
+        
+        
+        newUser.Properties["userAccountControl"].Value = 0x0002;
+        newUser.Invoke("SetPassword", userPassword);
+        newUser.CommitChanges();
+        
         return _domainItemFactory.CreateInstance(newUser, DomainItemType.User, _propertiesToLoadResolver.Resolve(propsToLoad.GetPropertyLoader())).AsUser();
     }
 
-    public async Task<ContainerItem> CreateContainerAsync(ContainerItem directory, string name, SearchQuery propsToLoad = null)
+    public async Task<ContainerItem> CreateContainerAsync(ContainerItem directory, string name, SearchQuery? propsToLoad = null)
     {
         var container = await Task.Run(() => CreateContainer(directory, name, propsToLoad));
         return container;
     }
     
-    public ContainerItem CreateContainer(ContainerItem directory, string name, SearchQuery propsToLoad = null)
+    public ContainerItem CreateContainer(ContainerItem directory, string name, SearchQuery? propsToLoad = null)
     {
-        var newContainer = _directoryEntryBuilder.SetType(DirectoryEntryType.organizationalUnit)
-            .SetName(directory, name).Build();
+        var newContainer = directory.GetUnderlyingObject()
+            .Children.Add($"OU={name}", "organizationalUnit");
+        newContainer.CommitChanges();
+        
 
         return _domainItemFactory.CreateInstance(newContainer, DomainItemType.Container, _propertiesToLoadResolver.Resolve(propsToLoad.GetPropertyLoader())).AsContainer();
     }
@@ -147,11 +116,12 @@ public sealed class ActiveDirectoryManager : IActiveDirectoryManager // TODO: С
         return group;
     }
 
-    public GroupItem CreateGroup(ContainerItem directory, string name, SearchQuery propsToLoad = null)
+    public GroupItem CreateGroup(ContainerItem directory, string name, SearchQuery? propsToLoad = null)
     {
-        var newGroup = _directoryEntryBuilder.SetType(DirectoryEntryType.group)
-            .SetName(directory, name).Build();
-
+        var newGroup = directory.GetUnderlyingObject()
+            .Children.Add($"CN={name}", "group");
+        newGroup.CommitChanges();
+       
         return _domainItemFactory.CreateInstance(newGroup, DomainItemType.Group, _propertiesToLoadResolver.Resolve(propsToLoad.GetPropertyLoader())).AsGroup();
     }
 }
