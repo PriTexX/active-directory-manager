@@ -18,7 +18,7 @@ public sealed class PropertyLoader
 
     public bool IsEmpty()
     {
-        return PropertyCollection.Count > 0;
+        return PropertyCollection.Count == 0;
     }
 
     public bool SamAccountName { get => GetProperty("samaccountname"); set => SetProperty("samaccountname", value); }
