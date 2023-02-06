@@ -142,4 +142,26 @@ public sealed class ActiveDirectoryManager : IActiveDirectoryManager // TODO: С
        
         return _domainItemFactory.CreateInstance(newGroup, DomainItemType.Group, _propertiesToLoadResolver.Resolve(propsToLoad?.GetPropertyLoader())).AsGroup();
     }
+    
+    public void Enable(UserItem userItem)
+    {
+        var val = (int)userItem.GetUnderlyingObject().Properties["userAccountControl"].Value;
+        userItem.GetUnderlyingObject().Properties["userAccountControl"].Value = val & ~0x2;
+    }
+
+    public void Disable(UserItem userItem)
+    {
+        var val = (int)userItem.GetUnderlyingObject().Properties["userAccountControl"].Value;
+        userItem.GetUnderlyingObject().Properties["userAccountControl"].Value = val | 0x2;
+    }
+
+    public async Task EnableAsync(UserItem userItem)
+    {
+        await Task.Run(() => EnableAsync(userItem));
+    }
+
+    public async Task DisableAsync(UserItem userItem)
+    {
+        await Task.Run(() => DisableAsync(userItem));
+    }
 }

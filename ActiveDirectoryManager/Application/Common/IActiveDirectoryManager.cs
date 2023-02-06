@@ -27,11 +27,17 @@ public interface IActiveDirectoryManager
     public void CopyTo(DomainItem item, ContainerItem containerItem);
     public void CopyTo(DomainItem item, ContainerItem containerItem, string newName);
 
-    public UserItem CreateUser(ContainerItem directory, string name, string userPassword, SearchQuery propsToLoad = null);
-    public ContainerItem CreateContainer(ContainerItem directory, string name, SearchQuery propsToLoad = null);
-    public GroupItem CreateGroup(ContainerItem directory, string name, SearchQuery propsToLoad = null);
+    public UserItem CreateUser(ContainerItem directory, string name, string userPassword, SearchQuery? propsToLoad = null);
+    public ContainerItem CreateContainer(ContainerItem directory, string name, SearchQuery? propsToLoad = null);
+    public GroupItem CreateGroup(ContainerItem directory, string name, SearchQuery? propsToLoad = null);
     
-    public Task<UserItem> CreateUserAsync(ContainerItem directory, string name, string userPassword, SearchQuery propsToLoad = null);
-    public Task<ContainerItem> CreateContainerAsync(ContainerItem directory, string name, SearchQuery propsToLoad = null);
-    public Task<GroupItem> CreateGroupAsync(ContainerItem directory, string name, SearchQuery propsToLoad = null);
+    public Task<UserItem> CreateUserAsync(ContainerItem directory, string name, string userPassword, SearchQuery? propsToLoad = null);
+    public Task<ContainerItem> CreateContainerAsync(ContainerItem directory, string name, SearchQuery? propsToLoad = null);
+    public Task<GroupItem> CreateGroupAsync(ContainerItem directory, string name, SearchQuery? propsToLoad = null);
+    
+    public void Enable(UserItem userItem);
+    public void Disable(UserItem userItem);
+    
+    public Task EnableAsync(UserItem userItem);
+    public Task DisableAsync(UserItem userItem);
 }
