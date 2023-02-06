@@ -105,7 +105,7 @@ public sealed class ActiveDirectoryManager : IActiveDirectoryManager // TODO: С
         newUser.CommitChanges();
         
         
-        newUser.Properties["userAccountControl"].Value = 0x0002;
+        newUser.Properties["userAccountControl"].Value = 512;
         newUser.Invoke("SetPassword", userPassword);
         newUser.CommitChanges();
         
