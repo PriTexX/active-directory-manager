@@ -18,7 +18,7 @@ jobs:
         id: extract_tag
         
       - name: Extract tag value
-        run: echo "::set-output name=tag::$(echo ${TAG_REF#refs/tags/})"
+        run: echo "::set-output name=tag::$(echo ${TAG_REF#refs/tags/v})"
         env:
           TAG_REF: ${{ steps.extract_tag.outputs.release_tag }}
           
