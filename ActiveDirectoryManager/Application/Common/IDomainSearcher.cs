@@ -4,6 +4,8 @@ namespace ActiveDirectoryManager.Application;
 
 public interface IDomainSearcher
 {
+    public string Domain { get; }
+    
     public DomainItem? FindOne(SearchQuery searchQuery, DomainItemType type = DomainItemType.User);
     public IEnumerable<DomainItem?> FindAll(SearchQuery searchQuery, DomainItemType type = DomainItemType.User);
     public IEnumerable<GroupItem?> FindItemGroups(DomainItem domainItem, SearchQuery? searchQuery = null);
