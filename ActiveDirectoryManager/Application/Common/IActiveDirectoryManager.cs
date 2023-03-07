@@ -4,6 +4,7 @@ namespace ActiveDirectoryManager.Application;
 
 public interface IActiveDirectoryManager
 {
+    public string Domain { get; }
     public Task AddToGroupAsync(DomainItem item, GroupItem groupItem);
     
     public void AddToGroup(DomainItem item, GroupItem groupItem);

@@ -17,7 +17,10 @@ public sealed class ActiveDirectoryConnectionFactory : IActiveDirectoryConnectio
         _domain = domain;
         _username = username;
         _password = password;
+        Domain = domain;
     }
+
+    public string Domain { get; }
 
     public PrincipalContext Connect()
     {

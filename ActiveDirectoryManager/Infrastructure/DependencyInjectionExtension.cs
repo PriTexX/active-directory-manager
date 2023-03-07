@@ -7,7 +7,8 @@ namespace Microsoft.Extensions.DependencyInjection;
 [SupportedOSPlatform("windows")]
 public static class DependencyInjectionExtension
 {
-    public static IServiceCollection AddActiveDirectoryServices(this IServiceCollection services, 
+    public static IServiceCollection AddActiveDirectoryServices
+    (this IServiceCollection services, 
         string domain, string user, string password, 
         Func<IDomainSearcherBuilder, IDomainSearcherBuilder> domainSearcherConfigurator)
     {

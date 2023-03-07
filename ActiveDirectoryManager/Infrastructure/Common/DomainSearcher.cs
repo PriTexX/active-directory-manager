@@ -18,7 +18,10 @@ public sealed class DomainSearcher : IDomainSearcher
         _connectionFactory = connectionFactory;
         _directorySearcherBuilder = directorySearcherBuilder;
         _propertiesToLoadResolver = propertiesToLoadResolver;
+        Domain = _connectionFactory.Domain;
     }
+
+    public string Domain { get; }
 
     public DomainItem? FindOne(SearchQuery searchQuery, DomainItemType type = DomainItemType.User)
     {

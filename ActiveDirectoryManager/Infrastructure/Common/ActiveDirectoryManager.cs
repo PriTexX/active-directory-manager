@@ -16,7 +16,10 @@ public sealed class ActiveDirectoryManager : IActiveDirectoryManager // TODO: С
         _connectionFactory = connectionFactory;
         _domainItemFactory = domainItemFactory;
         _propertiesToLoadResolver = propertiesToLoadResolver;
+        Domain = _connectionFactory.Domain;
     }
+
+    public string Domain { get; }
 
     public async Task AddToGroupAsync(DomainItem item, GroupItem groupItem)
     {
