@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.DirectoryServices;
 using System.Runtime.Versioning;
-using ActiveDirectoryManager.ActiveDirectoryItem;
+using ActiveDirectoryManager.Application;
+using ActiveDirectoryManager.Core;
 
-namespace ActiveDirectoryManager.ItemFactory;
+namespace ActiveDirectoryManager.Infrastructure;
 
 [SupportedOSPlatform("windows")]
-public class DomainItemFactory : IDomainItemFactory
+internal sealed class DomainItemFactory : IDomainItemFactory
 {
     public DomainItem CreateInstance(SearchResult searchResult, DomainItemType type)
     {
