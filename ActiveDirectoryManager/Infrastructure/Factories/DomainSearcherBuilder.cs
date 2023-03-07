@@ -1,13 +1,9 @@
 ﻿using System.Runtime.Versioning;
-using ActiveDirectoryManager.Application.Common;
-using ActiveDirectoryManager.Application.Factories;
-using ActiveDirectoryManager.Core.Search.Common;
-using ActiveDirectoryManager.Core.Search.Engine;
-using ActiveDirectoryManager.Core.Search.Filter;
-using ActiveDirectoryManager.Core.Search.PropertiesLoader;
-using ActiveDirectoryManager.Infrastructure.Common;
+using ActiveDirectoryManager.Application;
+using ActiveDirectoryManager.Core;
+using ActiveDirectoryManager.Infrastructure;
 
-namespace ActiveDirectoryManager.Infrastructure.Factories;
+namespace ActiveDirectoryManager.Infrastructure;
 
 [SupportedOSPlatform("windows")]
 public sealed class DomainSearcherBuilder : IDomainSearcherBuilder

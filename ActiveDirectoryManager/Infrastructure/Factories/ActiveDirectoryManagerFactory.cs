@@ -1,10 +1,10 @@
-﻿using ActiveDirectoryManager.Application.Common;
-using ActiveDirectoryManager.Application.Factories;
-using ActiveDirectoryManager.Core.Search.PropertiesLoader;
-using ActiveDirectoryManager.Infrastructure.Common;
+﻿using System.Runtime.Versioning;
+using ActiveDirectoryManager.Application;
+using ActiveDirectoryManager.Core;
 
-namespace ActiveDirectoryManager.Infrastructure.Factories;
+namespace ActiveDirectoryManager.Infrastructure;
 
+[SupportedOSPlatform("windows")]
 public sealed class ActiveDirectoryManagerFactory : IActiveDirectoryManagerFactory
 {
     private IActiveDirectoryManager? _activeDirectoryManager;
@@ -44,7 +44,7 @@ public sealed class ActiveDirectoryManagerFactory : IActiveDirectoryManagerFacto
         if (_connectionFactory is null)
             throw new ArgumentException("Connection options must be specified.");
 
-        _activeDirectoryManager = new Infrastructure.Common.ActiveDirectoryManager(_connectionFactory, _domainItemFactory, _propertiesToLoadResolver);
+        _activeDirectoryManager = new Infrastructure.ActiveDirectoryManager(_connectionFactory, _domainItemFactory, _propertiesToLoadResolver);
 
         _domainSearcher = _domainSearcherBuilder
             .SetConnectionFactory(_connectionFactory)

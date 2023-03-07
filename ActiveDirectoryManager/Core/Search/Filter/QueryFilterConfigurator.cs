@@ -1,4 +1,4 @@
-﻿namespace ActiveDirectoryManager.Core.Search.Filter;
+﻿namespace ActiveDirectoryManager.Core;
 
 public sealed class QueryFilterConfigurator
 {

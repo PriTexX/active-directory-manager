@@ -1,7 +1,6 @@
-﻿using ActiveDirectoryManager.Core.Search.Filter;
-using ActiveDirectoryManager.Core.Search.PropertiesLoader;
+﻿using ActiveDirectoryManager.Core;
 
-namespace ActiveDirectoryManager.Core.Search.Common;
+namespace ActiveDirectoryManager.Core;
 
 public sealed class SearchQuery
 {

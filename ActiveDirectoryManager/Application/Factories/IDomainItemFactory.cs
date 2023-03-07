@@ -1,7 +1,7 @@
 ﻿using System.DirectoryServices;
-using ActiveDirectoryManager.Core.Entities;
+using ActiveDirectoryManager.Core;
 
-namespace ActiveDirectoryManager.Application.Factories;
+namespace ActiveDirectoryManager.Application;
 
 public interface IDomainItemFactory
 {

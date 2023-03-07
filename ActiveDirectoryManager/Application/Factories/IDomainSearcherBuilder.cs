@@ -1,7 +1,6 @@
-﻿using ActiveDirectoryManager.Application.Common;
-using ActiveDirectoryManager.Core.Search.Common;
+﻿using ActiveDirectoryManager.Core;
 
-namespace ActiveDirectoryManager.Application.Factories;
+namespace ActiveDirectoryManager.Application;
 
 public interface IDomainSearcherBuilder
 {

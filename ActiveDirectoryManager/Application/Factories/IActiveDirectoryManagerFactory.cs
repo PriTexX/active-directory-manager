@@ -1,6 +1,4 @@
-﻿using ActiveDirectoryManager.Application.Common;
-
-namespace ActiveDirectoryManager.Application.Factories;
+﻿namespace ActiveDirectoryManager.Application;
 
 public interface IActiveDirectoryManagerFactory
 {

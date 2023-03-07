@@ -1,7 +1,6 @@
-﻿using ActiveDirectoryManager.Core.Entities;
-using ActiveDirectoryManager.Core.Search.Common;
+﻿using ActiveDirectoryManager.Core;
 
-namespace ActiveDirectoryManager.Application.Common;
+namespace ActiveDirectoryManager.Application;
 
 public interface IActiveDirectoryManager
 {

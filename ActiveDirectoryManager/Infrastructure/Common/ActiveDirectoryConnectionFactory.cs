@@ -1,8 +1,8 @@
 ﻿using System.DirectoryServices.AccountManagement;
 using System.Runtime.Versioning;
-using ActiveDirectoryManager.Application.Factories;
+using ActiveDirectoryManager.Application;
 
-namespace ActiveDirectoryManager.Infrastructure.Common;
+namespace ActiveDirectoryManager.Infrastructure;
 
 [SupportedOSPlatform("windows")]
 public sealed class ActiveDirectoryConnectionFactory : IActiveDirectoryConnectionFactory

@@ -1,9 +1,8 @@
 ﻿using System.DirectoryServices;
 using System.DirectoryServices.AccountManagement;
-using ActiveDirectoryManager.Core.Entities;
-using ActiveDirectoryManager.Core.Search.Filter;
+using ActiveDirectoryManager.Core;
 
-namespace ActiveDirectoryManager.Core.Search.Engine;
+namespace ActiveDirectoryManager.Core;
 
 internal sealed class DirectorySearcherBuilder
 {

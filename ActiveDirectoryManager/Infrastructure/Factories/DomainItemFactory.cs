@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using System.DirectoryServices;
 using System.Runtime.Versioning;
-using ActiveDirectoryManager.Application.Factories;
-using ActiveDirectoryManager.Core.Entities;
+using ActiveDirectoryManager.Application;
+using ActiveDirectoryManager.Core;
 
-namespace ActiveDirectoryManager.Infrastructure.Factories;
+namespace ActiveDirectoryManager.Infrastructure;
 
 [SupportedOSPlatform("windows")]
 internal sealed class DomainItemFactory : IDomainItemFactory

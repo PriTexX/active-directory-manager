@@ -1,4 +1,4 @@
-﻿namespace ActiveDirectoryManager.Core.Search.PropertiesLoader;
+﻿namespace ActiveDirectoryManager.Core;
 
 internal sealed class PropertiesToLoadResolver : IPropertyResolver
 {

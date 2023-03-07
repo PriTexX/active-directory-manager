@@ -1,7 +1,7 @@
 ﻿using System.Text;
-using ActiveDirectoryManager.Core.Entities;
+using ActiveDirectoryManager.Core;
 
-namespace ActiveDirectoryManager.Core.Search.Filter;
+namespace ActiveDirectoryManager.Core;
 
 internal sealed class FilterBuilder
 {

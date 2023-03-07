@@ -1,4 +1,4 @@
-﻿namespace ActiveDirectoryManager.Core.Entities;
+﻿namespace ActiveDirectoryManager.Core;
 
 public enum DomainItemType
 {

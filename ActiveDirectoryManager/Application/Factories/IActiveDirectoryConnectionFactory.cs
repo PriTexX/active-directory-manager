@@ -1,6 +1,6 @@
 ﻿using System.DirectoryServices.AccountManagement;
 
-namespace ActiveDirectoryManager.Application.Factories;
+namespace ActiveDirectoryManager.Application;
 
 public interface IActiveDirectoryConnectionFactory
 {

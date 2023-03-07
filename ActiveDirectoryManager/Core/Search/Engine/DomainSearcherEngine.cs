@@ -1,7 +1,7 @@
 ﻿using System.DirectoryServices;
 using System.Runtime.Versioning;
 
-namespace ActiveDirectoryManager.Core.Search.Engine;
+namespace ActiveDirectoryManager.Core;
 
 [SupportedOSPlatform("windows")]
 internal static class DomainSearcherEngine
