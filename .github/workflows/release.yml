@@ -22,8 +22,8 @@ jobs:
           echo ${{ env.RELEASE_VERSION }}
           
       - name: Build
-        run: dotnet build --configuration Release /p:Version=${{env.tag}}
+        run: dotnet build --configuration Release /p:Version=${{env.RELEASE_VERSION}}
       - name: Pack
-        run: dotnet pack --configuration Release /p:Version=${{env.tag}} --no-build --output .
+        run: dotnet pack --configuration Release /p:Version=${{env.RELEASE_VERSION}} --no-build --output .
       - name: Push
-        run: dotnet nuget push /home/runner/work/active-directory-manager/active-directory-manager/ActiveDirectoryManager.${{env.tag}}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{secrets.NUGET_API_KEY}}
+        run: dotnet nuget push /home/runner/work/active-directory-manager/active-directory-manager/ActiveDirectoryManager.${{env.RELEASE_VERSION}}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{secrets.NUGET_API_KEY}}
