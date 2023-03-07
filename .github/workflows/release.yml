@@ -13,14 +13,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         
-      - name: Get tag
-        run: echo "Release tag is ${{ github.ref }}"
-        id: extract_tag
+      - name: Set env
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/v*}" >> $GITHUB_ENV
         
-      - name: Extract tag value
-        run: echo "::set-output name=tag::$(echo ${TAG_REF#refs/tags/v})"
-        env:
-          TAG_REF: ${{ steps.extract_tag.outputs.release_tag }}
+      - name: Test
+        run: |
+          echo $RELEASE_VERSION
+          echo ${{ env.RELEASE_VERSION }}
           
       - name: Build
         run: dotnet build --configuration Release /p:Version=${{env.tag}}
