@@ -44,7 +44,7 @@ public sealed class ActiveDirectoryManagerFactory : IActiveDirectoryManagerFacto
         if (_connectionFactory is null)
             throw new ArgumentException("Connection options must be specified.");
 
-        _activeDirectoryManager = new Infrastructure.ActiveDirectoryManager(_connectionFactory, _domainItemFactory, _propertiesToLoadResolver);
+        _activeDirectoryManager = new ActiveDirectoryManager(_connectionFactory, _domainItemFactory, _propertiesToLoadResolver);
 
         _domainSearcher = _domainSearcherBuilder
             .SetConnectionFactory(_connectionFactory)
