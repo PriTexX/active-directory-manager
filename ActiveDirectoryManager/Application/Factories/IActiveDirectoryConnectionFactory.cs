@@ -2,9 +2,8 @@
 
 namespace ActiveDirectoryManager.Application;
 
-public interface IActiveDirectoryConnectionFactory
+internal interface IActiveDirectoryConnectionFactory
 {
     public string Domain { get; }
     public PrincipalContext Connect();
-    public Task<PrincipalContext> ConnectAsync();
 }

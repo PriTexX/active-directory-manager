@@ -74,7 +74,7 @@ public sealed class DomainSearcher : IDomainSearcher
 
     public async Task<DomainItem?> FindOneAsync(SearchQuery searchQuery, DomainItemType type = DomainItemType.User)
     {
-        var directorySearcher = _directorySearcherBuilder.CreateInstance(await _connectionFactory.ConnectAsync(), type,
+        var directorySearcher = _directorySearcherBuilder.CreateInstance(_connectionFactory.Connect(), type,
             searchQuery.GetQueryFilter(), _propertiesToLoadResolver.Resolve(searchQuery.GetPropertyLoader()));
         
         var searchResult = await DomainSearcherEngine.FindOneItemAsync(directorySearcher);
@@ -84,7 +84,7 @@ public sealed class DomainSearcher : IDomainSearcher
 
     public async IAsyncEnumerable<DomainItem?> FindAllAsync(SearchQuery searchQuery, DomainItemType type = DomainItemType.User)
     {
-        var directorySearcher = _directorySearcherBuilder.CreateInstance(await _connectionFactory.ConnectAsync(), type,
+        var directorySearcher = _directorySearcherBuilder.CreateInstance(_connectionFactory.Connect(), type,
             searchQuery.GetQueryFilter(), _propertiesToLoadResolver.Resolve(searchQuery.GetPropertyLoader()));
         
         var searchResult = DomainSearcherEngine.FindAllItemsAsync(directorySearcher);
@@ -96,7 +96,7 @@ public sealed class DomainSearcher : IDomainSearcher
     public async IAsyncEnumerable<GroupItem?> FindItemGroupsAsync(DomainItem domainItem, SearchQuery? searchQuery = null)
     {
         var filter = $"(&(objectCategory=group)(member:1.2.840.113556.1.4.1941:={domainItem.DistinguishedName}))";
-        var directorySearcher = _directorySearcherBuilder.CreateInstance(await _connectionFactory.ConnectAsync(), domainItem.DomainItemType, filter, 
+        var directorySearcher = _directorySearcherBuilder.CreateInstance(_connectionFactory.Connect(), domainItem.DomainItemType, filter, 
             _propertiesToLoadResolver.Resolve(searchQuery?.GetPropertyLoader()));
 
         var searchResult = DomainSearcherEngine.FindAllItemsAsync(directorySearcher);
@@ -108,7 +108,7 @@ public sealed class DomainSearcher : IDomainSearcher
     public async IAsyncEnumerable<UserItem?> FindGroupUsersAsync(GroupItem group, SearchQuery? searchQuery = null)
     {
         var filter = $"(&(sAMAccountType=805306368)(memberOf:1.2.840.113556.1.4.1941:={group.DistinguishedName}))";
-        var directorySearcher = _directorySearcherBuilder.CreateInstance(await _connectionFactory.ConnectAsync(), group.DomainItemType, filter, 
+        var directorySearcher = _directorySearcherBuilder.CreateInstance(_connectionFactory.Connect(), group.DomainItemType, filter, 
             _propertiesToLoadResolver.Resolve(searchQuery?.GetPropertyLoader()));
 
         var searchResult = DomainSearcherEngine.FindAllItemsAsync(directorySearcher);

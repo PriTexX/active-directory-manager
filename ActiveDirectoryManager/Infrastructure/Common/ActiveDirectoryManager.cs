@@ -7,16 +7,14 @@ namespace ActiveDirectoryManager.Infrastructure;
 [SupportedOSPlatform("windows")]
 public sealed class ActiveDirectoryManager : IActiveDirectoryManager // TODO: Сделать возможность делать ретрай операций
 {
-    private readonly IActiveDirectoryConnectionFactory _connectionFactory;
     private readonly IPropertyResolver _propertiesToLoadResolver;
     private readonly IDomainItemFactory _domainItemFactory;
 
-    internal ActiveDirectoryManager(IActiveDirectoryConnectionFactory connectionFactory, IDomainItemFactory domainItemFactory, IPropertyResolver propertiesToLoadResolver)
+    internal ActiveDirectoryManager(string domain, IDomainItemFactory domainItemFactory, IPropertyResolver propertiesToLoadResolver)
     {
-        _connectionFactory = connectionFactory;
         _domainItemFactory = domainItemFactory;
         _propertiesToLoadResolver = propertiesToLoadResolver;
-        Domain = _connectionFactory.Domain;
+        Domain = domain;
     }
 
     public string Domain { get; }

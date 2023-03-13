@@ -5,7 +5,7 @@ using ActiveDirectoryManager.Application;
 namespace ActiveDirectoryManager.Infrastructure;
 
 [SupportedOSPlatform("windows")]
-public sealed class ActiveDirectoryConnectionFactory : IActiveDirectoryConnectionFactory
+internal sealed class ActiveDirectoryConnectionFactory : IActiveDirectoryConnectionFactory
 {
     private PrincipalContext? _context;
     private readonly string _domain;

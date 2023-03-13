@@ -25,7 +25,7 @@ public sealed class DomainSearcherBuilder : IDomainSearcherBuilder
         return this;
     }
 
-    public IDomainSearcherBuilder SetConnectionFactory(IActiveDirectoryConnectionFactory connectionFactory)
+    IDomainSearcherBuilder IDomainSearcherBuilder.SetConnectionFactory(IActiveDirectoryConnectionFactory connectionFactory)
     {
         _connectionFactory = connectionFactory;
         return this;
