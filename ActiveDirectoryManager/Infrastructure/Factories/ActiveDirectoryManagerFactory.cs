@@ -11,10 +11,10 @@ public sealed class ActiveDirectoryManagerFactory : IActiveDirectoryManagerFacto
     private IDomainSearcher? _domainSearcher;
     private IActiveDirectoryConnectionFactory? _connectionFactory;
     private IDomainSearcherBuilder _domainSearcherBuilder;
-    private IPropertyResolver _propertiesToLoadResolver;
+    private readonly IPropertyResolver _propertiesToLoadResolver;
     private readonly IDomainItemFactory _domainItemFactory;
 
-    internal ActiveDirectoryManagerFactory(IDomainSearcherBuilder domainSearcherBuilder, IPropertyResolver propertiesToLoadResolver, IDomainItemFactory domainItemFactory)
+    private ActiveDirectoryManagerFactory(IDomainSearcherBuilder domainSearcherBuilder, IPropertyResolver propertiesToLoadResolver, IDomainItemFactory domainItemFactory)
     {
         _domainSearcherBuilder = domainSearcherBuilder;
         _propertiesToLoadResolver = propertiesToLoadResolver;
