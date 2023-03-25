@@ -13,9 +13,17 @@ public interface IActiveDirectoryManager
     
     public void RemoveFromGroup(DomainItem item, GroupItem groupItem);
     
-    public Task RenameAsync(DomainItem item, string newName);
+    public void Enable(UserItem userItem);
+
+    public Task EnableAsync(UserItem userItem);
+
+    public void Disable(UserItem userItem);
+
+    public Task DisableAsync(UserItem userItem);
     
     public void Rename(DomainItem item, string newName);
+    
+    public Task RenameAsync(DomainItem item, string newName);
 
     public Task MoveToAsync(DomainItem item, ContainerItem containerItem);
     

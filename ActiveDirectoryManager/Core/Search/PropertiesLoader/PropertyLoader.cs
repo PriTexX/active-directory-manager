@@ -35,6 +35,7 @@ public sealed class PropertyLoader
     public bool Mail { get => GetProperty("mail"); set => SetProperty("mail", value); }
     public bool Department { get => GetProperty("department"); set => SetProperty("department", value); }
     public bool Company { get => GetProperty("company"); set => SetProperty("company", value); }
+    public bool Member { get => GetProperty("member"); set => SetProperty("member", value);}
 
     public static PropertyLoader GetDefault()
     {

@@ -20,6 +20,12 @@ public sealed class PropertyLoaderConfigurator
         return this;
     }
 
+    public PropertyLoaderConfigurator LoadMember()
+    {
+        _propertyLoader.Member = true;
+        return this;
+    }
+
     public PropertyLoaderConfigurator LoadSamAccountName()
     {
         _propertyLoader.SamAccountName = true;

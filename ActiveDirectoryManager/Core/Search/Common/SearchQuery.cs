@@ -1,6 +1,4 @@
-﻿using ActiveDirectoryManager.Core;
-
-namespace ActiveDirectoryManager.Core;
+﻿namespace ActiveDirectoryManager.Core;
 
 public sealed class SearchQuery
 {
