@@ -13,7 +13,7 @@ public abstract class DomainItem
     private string? _distinguishedName;
     
     protected internal DomainItemType DomainItemType;
-    protected internal readonly Dictionary<string, List<string?>> PropertyCollection = new (StringComparer.OrdinalIgnoreCase);
+    protected internal readonly Dictionary<string, List<string?>?> PropertyCollection = new (StringComparer.OrdinalIgnoreCase);
 
     public void Save()
     {
@@ -23,11 +23,11 @@ public abstract class DomainItem
         {
             if (GetUnderlyingObject().Properties.Contains(propertyName))
             {
-                GetUnderlyingObject().Properties[propertyName].Value = PropertyCollection[propertyName][0];
+                GetUnderlyingObject().Properties[propertyName].Value = PropertyCollection[propertyName]?[0];
             }
             else
             {
-                GetUnderlyingObject().Properties[propertyName].Add(PropertyCollection[propertyName][0]);
+                GetUnderlyingObject().Properties[propertyName].Add(PropertyCollection[propertyName]?[0]);
             }
         }
 
@@ -35,16 +35,12 @@ public abstract class DomainItem
         {
             if (GetUnderlyingObject().Properties.Contains(propertyName))
             {
-                GetUnderlyingObject().Properties[propertyName].Clear();
+                GetUnderlyingObject().Properties[propertyName].Clear();  // TODO Remove in later releases
             }
-                
-            foreach (var property in PropertyCollection[propertyName])
-            {
-                GetUnderlyingObject().Properties[propertyName].Add(property);
-            }
-                
-        }
             
+            GetUnderlyingObject().Properties[propertyName].AddRange(PropertyCollection[propertyName].ToArray());
+        }
+        
         GetUnderlyingObject().CommitChanges();
         _changedProperties.Clear();
         _changedMultProperties.Clear();
@@ -117,7 +113,7 @@ public abstract class DomainItem
         return PropertyCollection[key].Count == 0 ? null : PropertyCollection[key][0];
     }
 
-    protected void SetListAttributes(string key, List<string> val)
+    protected void SetListAttributes(string key, List<string?>? val)
     {
         if (!PropertyCollection.ContainsKey(key))
         {
@@ -130,7 +126,7 @@ public abstract class DomainItem
             _changedMultProperties.Add(key);
     }
     
-    protected List<string?>? GetListAttributes(string key)
+    protected List<string>? GetListAttributes(string key)
     {
         return !PropertyCollection.ContainsKey(key) ? null : PropertyCollection[key];
     }
