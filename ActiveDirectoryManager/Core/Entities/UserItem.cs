@@ -69,14 +69,14 @@ public sealed class UserItem : DomainItem
         set => SetAttribute("company", value);
     }
 
-    public void ResetPassword(string newPassword)
+    public void SetPassword(string newPassword)
     {
-        GetUnderlyingObject().Invoke("SetPassword", new object[] { newPassword });
+        GetUnderlyingObject().Invoke("SetPassword", newPassword);
         GetUnderlyingObject().Properties["LockOutTime"].Value = 0;
     }
 
-    public async Task ResetPasswordAsync(string newPassword)
+    public async Task SetPasswordAsync(string newPassword)
     {
-        await Task.Run(() => ResetPassword(newPassword));
+        await Task.Run(() => SetPassword(newPassword));
     }
 }

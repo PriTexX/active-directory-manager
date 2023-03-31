@@ -91,18 +91,19 @@ public sealed class ActiveDirectoryManager : IActiveDirectoryManager // TODO: С
         item.GetUnderlyingObject().CopyTo(containerItem.GetUnderlyingObject(), newName);
     }
 
-    public async Task<UserItem> CreateUserAsync(ContainerItem directory, string name, string userPassword, SearchQuery? propsToLoad = null)
+    public async Task<UserItem> CreateUserAsync(ContainerItem directory, string name, string userPassword, string samAccountName, SearchQuery? propsToLoad = null)
     {
-        var user = await Task.Run(() => CreateUser(directory, name, userPassword, propsToLoad));
+        var user = await Task.Run(() => CreateUser(directory, name, userPassword, samAccountName, propsToLoad));
         return user;
     }
     
-    public UserItem CreateUser(ContainerItem directory, string name, string userPassword, SearchQuery? propsToLoad = null)
+    public UserItem CreateUser(ContainerItem directory, string name, string userPassword, string samAccountName, SearchQuery? propsToLoad = null)
     {
         var newUser = directory.GetUnderlyingObject().Children.Add($"CN={name}", "user");
+        
+        newUser.Properties["samAccountName"].Value = samAccountName;
         newUser.CommitChanges();
-        
-        
+
         newUser.Properties["userAccountControl"].Value = 512;
         newUser.Invoke("SetPassword", userPassword);
         newUser.CommitChanges();
