@@ -2,8 +2,8 @@
 
 public sealed class SearchQuery
 {
-    private readonly PropertyLoader _propertyLoader = PropertyLoader.Empty();
-    private readonly QueryFilter _queryFilter = QueryFilter.Empty();
+    internal PropertyLoader _propertyLoader = PropertyLoader.Empty();
+    internal readonly QueryFilter _queryFilter = QueryFilter.Empty();
 
     public static SearchQuery Create()
     {
